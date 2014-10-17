@@ -21,6 +21,7 @@ app.on('ready', function() {
     'use-content-size': true,
   });
   mainWindow.loadUrl('file://' + __dirname + '/index.html');
+  mainWindow.focus();
 
   if (process.platform == 'darwin') {
     var template = [
@@ -30,6 +31,13 @@ app.on('ready', function() {
           {
             label: 'About Atom Shell',
             selector: 'orderFrontStandardAboutPanel:'
+          },
+          {
+            type: 'separator'
+          },
+          {
+            label: 'Services',
+            submenu: []
           },
           {
             type: 'separator'

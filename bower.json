@@ -1,0 +1,24 @@
+{
+  "name": "onsight-timer",
+  "version": "0.0.0",
+  "homepage": "https://github.com/malcolmalex/onsight-timer",
+  "authors": [
+    "Malcolm Alexander <malcolm.alexander1@gmail.com>"
+  ],
+  "description": "Competition rock climbing timer for onsight events.",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "timer-app/components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#~0.4.2",
+    "core-elements": "Polymer/core-elements#~0.4.2",
+    "paper-elements": "Polymer/paper-elements#~0.4.2"
+  }
+}

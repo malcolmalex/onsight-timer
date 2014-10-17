@@ -46,9 +46,19 @@
   BrowserWindow.prototype.openDevTools = function() {
     this._openDevTools();
     this.devToolsWebContents = this.getDevToolsWebContents();
-    return this.devToolsWebContents.once('destroyed', (function(_this) {
+    this.devToolsWebContents.once('destroyed', (function(_this) {
       return function() {
         return _this.devToolsWebContents = null;
+      };
+    })(this));
+    this.devToolsWebContents.once('did-finish-load', (function(_this) {
+      return function() {
+        return _this.emit('devtools-opened');
+      };
+    })(this));
+    return this.devToolsWebContents.once('destroyed', (function(_this) {
+      return function() {
+        return _this.emit('devtools-closed');
       };
     })(this));
   };

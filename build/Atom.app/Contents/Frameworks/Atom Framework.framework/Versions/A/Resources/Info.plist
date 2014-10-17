@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>BuildMachineOSBuild</key>
-	<string>12F45</string>
+	<string>13F34</string>
 	<key>CFBundleExecutable</key>
 	<string>Atom Framework</string>
 	<key>CFBundleIdentifier</key>
@@ -17,9 +17,9 @@
 	<key>DTSDKName</key>
 	<string>macosx</string>
 	<key>DTXcode</key>
-	<string>0511</string>
+	<string>0510</string>
 	<key>DTXcodeBuild</key>
-	<string>5B1008</string>
+	<string>5B130a</string>
 	<key>NSSupportsAutomaticGraphicsSwitching</key>
 	<true/>
 </dict>

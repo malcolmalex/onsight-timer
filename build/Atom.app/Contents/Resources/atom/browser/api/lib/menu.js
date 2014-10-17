@@ -158,10 +158,7 @@
                   v8Util.setHiddenValue(otherItem, 'checked', false);
                 }
               }
-              v8Util.setHiddenValue(item, 'checked', true);
-              if (process.platform === 'win32') {
-                return _this._updateStates();
-              }
+              return v8Util.setHiddenValue(item, 'checked', true);
             };
           })(this)
         });
@@ -173,13 +170,6 @@
     item.overrideReadOnlyProperty('menu', this);
     this.items.splice(pos, 0, item);
     return this.commandsMap[item.commandId] = item;
-  };
-
-  Menu.prototype.attachToWindow = function(window) {
-    if (process.platform === 'win32') {
-      this._callMenuWillShow();
-    }
-    return this._attachToWindow(window);
   };
 
   Menu.prototype._callMenuWillShow = function() {

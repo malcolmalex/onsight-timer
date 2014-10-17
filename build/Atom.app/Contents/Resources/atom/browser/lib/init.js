@@ -21,14 +21,14 @@
 
   endMark = process.argv.indexOf('--atom-shell-switches-end');
 
-  process.execArgv = process.argv.splice(startMark, endMark - startMark + 1);
+  process.argv.splice(startMark, endMark - startMark + 1);
 
   globalPaths = module.globalPaths;
 
   globalPaths.push(path.join(process.resourcesPath, 'atom', 'browser', 'api', 'lib'));
 
   setImmediate(function() {
-    var Readable, app, error, packageJson, packagePath, print, stdin;
+    var Readable, app, e, packageJson, packagePath, print, searchPaths, stdin, _i, _len;
     require(path.resolve(__dirname, '..', '..', 'common', 'lib', 'init.js'));
     if (process.platform === 'win32') {
       print = function() {
@@ -50,21 +50,31 @@
       message = (_ref = error.stack) != null ? _ref : "" + error.name + ": " + error.message;
       return require('dialog').showMessageBox({
         type: 'warning',
-        title: 'An javascript error occured in the browser',
+        title: 'A javascript error occured in the browser',
         message: 'uncaughtException',
         detail: message,
         buttons: ['OK']
       });
     });
+    require('app').on('quit', function() {
+      return process.emit('exit');
+    });
     require('./rpc-server.js');
     packageJson = null;
-    packagePath = path.join(process.resourcesPath, 'app');
-    try {
-      packageJson = JSON.parse(fs.readFileSync(path.join(packagePath, 'package.json')));
-    } catch (_error) {
-      error = _error;
-      packagePath = path.join(process.resourcesPath, 'default_app');
-      packageJson = JSON.parse(fs.readFileSync(path.join(packagePath, 'package.json')));
+    searchPaths = ['app', 'app.asar', 'default_app'];
+    for (_i = 0, _len = searchPaths.length; _i < _len; _i++) {
+      packagePath = searchPaths[_i];
+      try {
+        packagePath = path.join(process.resourcesPath, packagePath);
+        packageJson = JSON.parse(fs.readFileSync(path.join(packagePath, 'package.json')));
+        break;
+      } catch (_error) {
+        e = _error;
+        continue;
+      }
+    }
+    if (packageJson == null) {
+      throw new Error("Unable to find a valid app");
     }
     app = require('app');
     if (packageJson.version != null) {
@@ -75,6 +85,12 @@
     } else if (packageJson.name != null) {
       app.setName(packageJson.name);
     }
+    if (packageJson.desktopName != null) {
+      app.setDesktopName(packageJson.desktopName);
+    } else {
+      app.setDesktopName('#{app.getName()}.desktop');
+    }
+    require('./chrome-extension.js');
     return module._load(path.join(packagePath, packageJson.main), module, true);
   });
 

@@ -1,3 +1,7 @@
+// This app uses atom-shell to provide a cross-platform application, built
+// with standard web technologies, including node.js, chromium, and also
+// polymer. This file sets up atom shell.
+
 var app = require('app');  // Module to control application life.
 var BrowserWindow = require('browser-window');  // Module to create native browser window.
 

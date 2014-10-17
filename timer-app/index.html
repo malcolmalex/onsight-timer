@@ -1,11 +1,38 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Hello World!</title>
+    <!-- Load platform.js for polyfill support -->
+    <script src="components/platform/platform.js"></script>
+
+    <!-- Import components -->
+    <link rel="import" href="components/paper-dialog/paper-dialog-transition.html">
+    <link rel="import" href="components/paper-dialog/paper-dialog.html">
+    <link rel="import" href="components/paper-button/paper-button.html">
+    <link rel="import" href="components/paper-icon-button/paper-icon-button.html">
+    <link rel="import" href="components/core-icons/core-icons.html">
+
+    <link rel="stylesheet" href="styles/app.css">
+
+    <title>USAC Competition Climber</title>
   </head>
-  <body>
-    <h1>Hello World!</h1>
-    We are using node.js <script>document.write(process.version)</script>
-    and atom-shell <script>document.write(process.versions['atom-shell'])</script>.
-  </body>
-</html>
+<body unresolved>
+  <paper-dialog heading="Dialog" transition="paper-dialog-transition-bottom">
+    <p>Lorem ipsum dolor sit amet, doming noster at quo, nostrud lucilius rationibus ea duo. Vim no mucius dolores. No bonorum voluptatum vis, has iudicabit consectetuer ne. Nullam sensibus vim id, et quo graeci perpetua.</p>
+
+    <p>Id qui scripta laboramus dissentiet, verterem partiendo vim at. Stet dissentiet ut mei. Iriure facilis eloquentiam pro eu, nec an esse inciderint. In meliore abhorreant sea. Eros nostro ocurreret at nec. Cu per regione persecuti.</p>
+
+    <p>Lorem ipsum dolor sit amet, doming noster at quo, nostrud lucilius rationibus ea duo. Vim no mucius dolores. No bonorum voluptatum vis, has iudicabit consectetuer ne. Nullam sensibus vim id, et quo graeci perpetua.</p>
+
+    <paper-button label="Cancel" dismissive></paper-button>
+    <paper-button label="Save" affirmative autofocus></paper-button>
+
+  </paper-dialog>
+  <paper-icon-button icon="menu" onclick="toggleDialog('paper-dialog-transition-bottom')"></paper-icon-button>
+  <script>
+    function toggleDialog(transition) {
+      var dialog = document.querySelector('paper-dialog[transition=' + transition + ']');
+      dialog.toggle();
+    }
+  </script>
+
+</body></html>

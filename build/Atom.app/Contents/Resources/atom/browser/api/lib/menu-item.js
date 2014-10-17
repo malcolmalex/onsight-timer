@@ -52,28 +52,7 @@
       if (defaultValue == null) {
         defaultValue = null;
       }
-      if (this[name] == null) {
-        this[name] = defaultValue;
-      }
-      if (process.platform !== 'win32') {
-        return;
-      }
-      v8Util.setHiddenValue(this, name, this[name]);
-      return Object.defineProperty(this, name, {
-        enumerable: true,
-        get: (function(_this) {
-          return function() {
-            return v8Util.getHiddenValue(_this, name);
-          };
-        })(this),
-        set: (function(_this) {
-          return function(val) {
-            var _ref;
-            v8Util.setHiddenValue(_this, name, val);
-            return (_ref = _this.menu) != null ? _ref._updateStates() : void 0;
-          };
-        })(this)
-      });
+      return this[name] != null ? this[name] : this[name] = defaultValue;
     };
 
     MenuItem.prototype.overrideReadOnlyProperty = function(name, defaultValue) {
