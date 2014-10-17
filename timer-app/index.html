@@ -1,38 +1,45 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <!-- Load platform.js for polyfill support -->
-    <script src="components/platform/platform.js"></script>
+<head>
+  <!-- Load platform.js for polyfill support -->
+  <script src="components/platform/platform.js"></script>
 
-    <!-- Import components -->
-    <link rel="import" href="components/paper-dialog/paper-dialog-transition.html">
-    <link rel="import" href="components/paper-dialog/paper-dialog.html">
-    <link rel="import" href="components/paper-button/paper-button.html">
-    <link rel="import" href="components/paper-icon-button/paper-icon-button.html">
-    <link rel="import" href="components/core-icons/core-icons.html">
+  <!-- Import components -->
+  <!-- TODO: Import only what is needed -->
+  <link rel="import" href="components/paper-dialog/paper-dialog-transition.html">
+  <link rel="import" href="components/paper-dialog/paper-dialog.html">
+  <link rel="import" href="components/paper-button/paper-button.html">
+  <link rel="import" href="components/paper-icon-button/paper-icon-button.html">
+  <link rel="import" href="components/core-icons/core-icons.html">
+  <link rel="import" href="components/core-icons/av-icons.html">
+  <link rel="import" href="components/paper-input/paper-input.html">
+  <link rel="import" href="components/paper-fab/paper-fab.html">
 
-    <link rel="stylesheet" href="styles/app.css">
+  <link rel="stylesheet" href="styles/app.css">
 
-    <title>USAC Competition Climber</title>
-  </head>
-<body unresolved>
-  <paper-dialog heading="Dialog" transition="paper-dialog-transition-bottom">
-    <p>Lorem ipsum dolor sit amet, doming noster at quo, nostrud lucilius rationibus ea duo. Vim no mucius dolores. No bonorum voluptatum vis, has iudicabit consectetuer ne. Nullam sensibus vim id, et quo graeci perpetua.</p>
-
-    <p>Id qui scripta laboramus dissentiet, verterem partiendo vim at. Stet dissentiet ut mei. Iriure facilis eloquentiam pro eu, nec an esse inciderint. In meliore abhorreant sea. Eros nostro ocurreret at nec. Cu per regione persecuti.</p>
-
-    <p>Lorem ipsum dolor sit amet, doming noster at quo, nostrud lucilius rationibus ea duo. Vim no mucius dolores. No bonorum voluptatum vis, has iudicabit consectetuer ne. Nullam sensibus vim id, et quo graeci perpetua.</p>
-
-    <paper-button label="Cancel" dismissive></paper-button>
-    <paper-button label="Save" affirmative autofocus></paper-button>
-
+  <title>USA Climbing Official Competition Timer</title>
+</head>
+<body fullbleed unresolved>
+  <paper-dialog heading="Settings" transition="paper-dialog-transition-bottom">
+    <paper-input id="c_time" type="number" required error="(1 or greater)" min="1" label="Climbing Time" floatinglabel layout vertical></paper-input>
+    <paper-input id="t_time" type="number" required error="(0 or greater)" min="0" label="Transition Time" floatinglabel layout vertical></paper-input>
+    <paper-button dismissive>Cancel</paper-button>
+    <paper-button affirmative autofocus>Save</paper-button>
   </paper-dialog>
   <paper-icon-button icon="menu" onclick="toggleDialog('paper-dialog-transition-bottom')"></paper-icon-button>
-  <script>
-    function toggleDialog(transition) {
-      var dialog = document.querySelector('paper-dialog[transition=' + transition + ']');
-      dialog.toggle();
-    }
-  </script>
+  <div flex vertical center-justified layout center>
+    <div id="time" class="climb">00:00</div>
+    <div id="tagline">Transition</div>
+  </div>
+  <div id="controls">
+    <paper-fab id="play" mini icon="av:play-arrow"></paper-fab>
+    <paper-fab id="pause" mini icon="av:pause"></paper-fab>
+  </div>
 
-</body></html>
+<!-- Utilities, tock for timer, zepto as lighter jquery -->
+<script src="components/tock/tock.min.js"></script>
+<script src="components/zepto/zepto.min.js"></script>
+
+<script src="app.js"></script>
+</body>
+</html>

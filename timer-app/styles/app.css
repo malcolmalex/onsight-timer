@@ -4,6 +4,7 @@
       font-family: RobotoDraft, 'Helvetica Neue', Helvetica, Arial;
       font-size: 16px;
       color: rgba(0, 0, 0, 0.87);
+      background-color: #e4e3e3;
     }
 
     paper-dialog {
@@ -21,4 +22,36 @@
 
     paper-button[autofocus] {
       color: #4285f4;
+    }
+
+    #time {
+      font-size: 30vw;
+    }
+
+    #tagline {
+      font-size: 5vw;
+    }
+
+    #controls {
+      position: absolute;
+      bottom: 15px;
+      right: 15px;
+    }
+
+    #logo {
+      position: absolute;
+      bottom 15px;
+      left: 15px;
+    }
+
+    .transition {
+      color: #1fbc24;
+    }
+
+    .climb {
+      color: #000000;
+    }
+
+    .warning {
+      color: #f0120b;
     }
