@@ -6,11 +6,12 @@ var numeral = require('./components/numeraljs/numeral.js');
 var t_total_sec;
 var c_total_sec;
 
-// Declare timers
+// Declare streams (Observables)
 // TODO: Horrible organization here with so much global state
-var mainTimer;
-var transitionTimer;
-var climbTimer;
+var mainStream;
+var transitionStream;
+var climbStream;
+var beginTransitionStream;
 
 // Declare subscriptions that will be udpated in various event handlers
 var mainSubscription;
@@ -24,17 +25,17 @@ var ONE_MINUTE = new Audio("audio/one_minute_edited.mp3");
 var TEN_SECONDS = new Audio("audio/ten_seconds_edited.mp3");
 var TIME_TIME = new Audio("audio/time_time_edited.mp3");
 
-function createTimers() {
+function createStreams() {
   // Create transition and climb streams with events 1000 ms apart, but
   // keep only transition time and climb time worth
   // Get the countdown by subtracting the seconds from the stream total
-  transitionTimer = Rx.Observable.timer(1000,1000)
+  transitionStream = Rx.Observable.timer(1000,1000)
         .take(t_total_sec)
         .map( function (x) {
           return (t_total_sec - x);
         });
 
-  climbTimer = Rx.Observable.timer(1000,1000)
+  climbStream = Rx.Observable.timer(1000,1000)
         .take(c_total_sec)
         .map( function (x) {
           return (c_total_sec - x);
@@ -43,9 +44,42 @@ function createTimers() {
   // Concatenate the streams together, and repeat. This enables each to be
   // treated independently, yet put together and repeated with easily
   // understood behavior.
-  mainTimer = Rx.Observable.concat(transitionTimer, climbTimer).repeat();
+  mainStream = Rx.Observable.concat(transitionStream, climbStream).repeat();
+
+  beginTransitionStream = transitionStream.take(1);
 }
 
+function createSubscriptions() {
+
+  transitionSubscription = beginTransitionStream.subscribe(
+    function (x) {
+      BEGIN_TRANSITION.play();
+    },
+    function (err) {
+
+    },
+    function () {
+
+    }
+  );
+  // start/subscribe to the main event stream
+  mainSubscription = mainStream.subscribe(
+    function (x) {
+      var timeString = numeral(x).format('0:00:00').substr(2);
+      $('#time').text(timeString);
+      //console.log('Next: ' + numeral(x).format('0:00:00').substr(2));
+    },
+    function (err) {
+      console.log('Error: ' + err);
+    },
+    function () {
+      console.log('Completed');
+    }
+  );
+  console.log("started timer");
+
+
+}
 // Open settings window
 // function toggleDialog(transition) {
 //   $('paper-dialog[transition=' + transition + ']').toggle();
@@ -69,27 +103,15 @@ function save() {
   t_total_sec = t_min * 60 + t_sec;
   c_total_sec = c_min * 60 + c_sec;
 
-  createTimers();
+  createStreams();
 }
 
 // Add event handlers
 $('#play').on('click', function() {
-  console.log("started timer");
+  // TODO: add error toast for click play with no settings.
 
-  // start/subscribe to the main event stream
-  mainSubscription = mainTimer.subscribe(
-    function (x) {
-      var timeString = numeral(x).format('0:00:00').substr(2);
-      $('#time').text(timeString);
-      //console.log('Next: ' + numeral(x).format('0:00:00').substr(2));
-    },
-    function (err) {
-      console.log('Error: ' + err);
-    },
-    function () {
-      console.log('Completed');
-    }
-  );
+  createSubscriptions();
+
 });
 
 $('#stop').on('click', function() {
