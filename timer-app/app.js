@@ -11,7 +11,7 @@ var c_total_sec;
 var mainStream;
 var transitionStream;
 var climbStream;
-var beginTransitionStream;
+var transitionActionsStream;
 
 // Declare subscriptions that will be udpated in various event handlers
 var mainSubscription;
@@ -32,13 +32,13 @@ function createStreams() {
   transitionStream = Rx.Observable.timer(1000,1000)
         .take(t_total_sec)
         .map( function (x) {
-          return (t_total_sec - x);
+          return ["TRANSITION", (t_total_sec - x)];
         });
 
   climbStream = Rx.Observable.timer(1000,1000)
         .take(c_total_sec)
         .map( function (x) {
-          return (c_total_sec - x);
+          return ["CLIMB", (c_total_sec - x)];
         });
 
   // Concatenate the streams together, and repeat. This enables each to be
@@ -46,28 +46,77 @@ function createStreams() {
   // understood behavior.
   mainStream = Rx.Observable.concat(transitionStream, climbStream).repeat();
 
-  beginTransitionStream = transitionStream.take(1);
+  transitionActionsStream = mainStream.filter(
+    function (x) {
+      if (x[0] === "TRANSITION" && x[1] === t_total_sec) return x;
+    }
+  );
+
+  climbingBeginActionStream = mainStream.filter(
+    function (x) {
+      if (x[0] === "CLIMB" && x[1] === c_total_sec) return x;
+    }
+  );
+
+  oneMinuteWarningStream = mainStream.filter(
+    function (x) {
+      if (x[0] === "CLIMB" && x[1] === 60) return x;
+    }
+  );
+
+  tenSecondWarningStream = mainStream.filter(
+    function (x) {
+      if (x[0] === "CLIMB" && x[1] === 10) return x;
+    }
+  );
+
+
 }
 
 function createSubscriptions() {
 
-  transitionSubscription = beginTransitionStream.subscribe(
+  transitionSubscription = transitionActionsStream.subscribe(
     function (x) {
-      BEGIN_TRANSITION.play();
+      // BEGIN_TRANSITION.play();
+      $('#time').removeClass().addClass('transition');
+      $('#tagline').text("Transition");
     },
-    function (err) {
+    function (err) {},
+    function () {}
+  );
 
+  climbingBeginSubscription = climbingBeginActionStream.subscribe(
+    function (x) {
+      $('#time').removeClass().addClass('climb');
+      $('#tagline').text("Climb");
     },
-    function () {
+    function (err) {},
+    function () {}
+  );
 
-    }
+  oneMinuteWarningSubscription = oneMinuteWarningStream.subscribe(
+    function (x) {
+      // ONE_MINUTE.play();
+      $('#time').removeClass().addClass('warning');
+    },
+    function (err) {},
+    function () {}
+  );
+
+  tenSecondWarningSubscription = tenSecondWarningStream.subscribe(
+    function (x) {
+      // TEN_SECONDS.play();
+      $('#time').removeClass().addClass('warning');
+    },
+    function (err) {},
+    function () {}
   );
   // start/subscribe to the main event stream
   mainSubscription = mainStream.subscribe(
     function (x) {
-      var timeString = numeral(x).format('0:00:00').substr(2);
+      var timeString = numeral(x[1]).format('0:00:00').substr(2);
       $('#time').text(timeString);
-      //console.log('Next: ' + numeral(x).format('0:00:00').substr(2));
+      //console.log('Next: ' + x);
     },
     function (err) {
       console.log('Error: ' + err);
@@ -117,4 +166,8 @@ $('#play').on('click', function() {
 $('#stop').on('click', function() {
   console.log("stoped timer");
   mainSubscription.dispose();
+  transitionSubscription.dispose();
+  climbingBeginSubscription.dispose();
+  oneMinuteWarningSubscription.dispose();
+  tenSecondWarningSubscription.dispose();
 });
