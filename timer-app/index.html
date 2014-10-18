@@ -1,45 +1,47 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <!-- Load platform.js for polyfill support -->
-  <script src="components/platform/platform.js"></script>
+  <head>
+    <!-- Load platform.js for polyfill support -->
+    <script src="components/platform/platform.js"></script>
 
-  <!-- Import components -->
-  <!-- TODO: Import only what is needed -->
-  <link rel="import" href="components/paper-dialog/paper-dialog-transition.html">
-  <link rel="import" href="components/paper-dialog/paper-dialog.html">
-  <link rel="import" href="components/paper-button/paper-button.html">
-  <link rel="import" href="components/paper-icon-button/paper-icon-button.html">
-  <link rel="import" href="components/core-icons/core-icons.html">
-  <link rel="import" href="components/core-icons/av-icons.html">
-  <link rel="import" href="components/paper-input/paper-input.html">
-  <link rel="import" href="components/paper-fab/paper-fab.html">
+    <!-- Import components -->
+    <!-- TODO: Import only what is needed -->
+    <link rel="import" href="components/paper-dialog/paper-dialog-transition.html">
+    <link rel="import" href="components/paper-dialog/paper-dialog.html">
+    <link rel="import" href="components/paper-button/paper-button.html">
+    <link rel="import" href="components/paper-icon-button/paper-icon-button.html">
+    <link rel="import" href="components/core-icons/core-icons.html">
+    <link rel="import" href="components/core-icons/av-icons.html">
+    <link rel="import" href="components/paper-input/paper-input.html">
+    <link rel="import" href="components/paper-fab/paper-fab.html">
 
-  <link rel="stylesheet" href="styles/app.css">
+    <link rel="stylesheet" href="styles/app.css">
 
-  <title>USA Climbing Official Competition Timer</title>
-</head>
-<body fullbleed unresolved>
-  <paper-dialog heading="Settings" transition="paper-dialog-transition-bottom">
-    <paper-input id="c_time" type="number" required error="(1 or greater)" min="1" label="Climbing Time" floatinglabel layout vertical></paper-input>
-    <paper-input id="t_time" type="number" required error="(0 or greater)" min="0" label="Transition Time" floatinglabel layout vertical></paper-input>
-    <paper-button dismissive>Cancel</paper-button>
-    <paper-button affirmative autofocus>Save</paper-button>
-  </paper-dialog>
-  <paper-icon-button icon="menu" onclick="toggleDialog('paper-dialog-transition-bottom')"></paper-icon-button>
-  <div flex vertical center-justified layout center>
-    <div id="time" class="climb">00:00</div>
-    <div id="tagline">Transition</div>
-  </div>
-  <div id="controls">
-    <paper-fab id="play" mini icon="av:play-arrow"></paper-fab>
-    <paper-fab id="pause" mini icon="av:pause"></paper-fab>
-  </div>
+    <title>USA Climbing Official Competition Timer</title>
+  </head>
 
-<!-- Utilities, tock for timer, zepto as lighter jquery -->
-<script src="components/tock/tock.min.js"></script>
-<script src="components/zepto/zepto.min.js"></script>
+  <!-- Separate into some polymer elements -->
+  <body fullbleed unresolved>
+    <paper-dialog heading="Settings" transition="paper-dialog-transition-bottom">
+      <paper-input id="c_time" pattern="\d\d:\d\d" required error="(MM:SS)" label="Climbing Time" floatinglabel layout vertical></paper-input>
+      <paper-input id="t_time" pattern="\d\d:\d\d" required error="(MM:SS)" label="Transition Time" floatinglabel layout vertical></paper-input>
+      <paper-button dismissive>Cancel</paper-button>
+      <paper-button affirmative autofocus onclick="save()">Save</paper-button>
+    </paper-dialog>
+    <paper-icon-button icon="menu" onclick="toggleDialog('paper-dialog-transition-bottom')"></paper-icon-button>
+    <div flex vertical center-justified layout center>
+      <div id="time" class="climb">00:00</div>
+      <div id="tagline">Transition</div>
+    </div>
+    <div id="controls">
+      <paper-fab id="play" mini icon="av:play-arrow"></paper-fab>
+      <paper-fab id="stop" mini icon="av:stop"></paper-fab>
+    </div>
+    <!-- <img src="images/USA-Climbing-Logo.jpg"></img> -->
+    <!-- Utilities, tock for timer, zepto as lighter jquery -->
+    <script src="components/zepto/zepto.min.js"></script>
 
-<script src="app.js"></script>
-</body>
+    <!-- Primary application logic -->
+    <script src="app.js"></script>
+  </body>
 </html>
