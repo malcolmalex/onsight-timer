@@ -1,16 +1,16 @@
-//TODO: Save these to local storage eventually
 var Rx = require('./components/rxjs/dist/rx.lite.js');
 var numeral = require('./components/numeraljs/numeral.js');
 
-// Default transition and climb times (in seconds) for test
-var t_min = 3;
-var t_sec = 30;
-var c_min = 4;
-var c_sec = 0;
+// Declare transition and climb time in seconds
+//TODO: Save these to local storage eventually
+var t_total_sec;
+var c_total_sec;
 
-// Calculate transition time and climb time from minutes and seconds
-var t_total_sec = t_min * 60 + t_sec;
-var c_total_sec = c_min * 60 + c_sec;
+// Declare timers
+// TODO: Horrible organization here with so much global state
+var mainTimer;
+var transitionTimer;
+var climbTimer;
 
 // Declare subscriptions that will be udpated in various event handlers
 var mainSubscription;
@@ -24,37 +24,52 @@ var ONE_MINUTE = new Audio("audio/one_minute_edited.mp3");
 var TEN_SECONDS = new Audio("audio/ten_seconds_edited.mp3");
 var TIME_TIME = new Audio("audio/time_time_edited.mp3");
 
-// Create transition and climb streams with events 1000 ms apart, but
-// keep only transition time and climb time worth
-// Get the countdown by subtracting the seconds from the stream total
-var transitionTimer = Rx.Observable.timer(1000,1000)
-      .take(t_total_sec)
-      .map( function (x) {
-        return (t_total_sec - x);
-      });
+function createTimers() {
+  // Create transition and climb streams with events 1000 ms apart, but
+  // keep only transition time and climb time worth
+  // Get the countdown by subtracting the seconds from the stream total
+  transitionTimer = Rx.Observable.timer(1000,1000)
+        .take(t_total_sec)
+        .map( function (x) {
+          return (t_total_sec - x);
+        });
 
-var climbTimer = Rx.Observable.timer(1000,1000)
-      .take(c_total_sec)
-      .map( function (x) {
-        return (c_total_sec - x);
-      });
+  climbTimer = Rx.Observable.timer(1000,1000)
+        .take(c_total_sec)
+        .map( function (x) {
+          return (c_total_sec - x);
+        });
 
-// Concatenate the streams together, and repeat. This enables each to be
-// treated independently, yet put together and repeated with easily
-// understood behavior.
-var mainTimer = Rx.Observable.concat(transitionTimer, climbTimer).repeat();
-
-// Open settings window
-function toggleDialog(transition) {
-  $('#paper-dialog[transition=' + transition + ']').toggle();
+  // Concatenate the streams together, and repeat. This enables each to be
+  // treated independently, yet put together and repeated with easily
+  // understood behavior.
+  mainTimer = Rx.Observable.concat(transitionTimer, climbTimer).repeat();
 }
 
-// Save transition and climb times in minutes and seconds
+// Open settings window
+// function toggleDialog(transition) {
+//   $('paper-dialog[transition=' + transition + ']').toggle();
+// }
+function toggleDialog(transition) {
+  var dialog = document.querySelector('paper-dialog[transition=' + transition + ']');
+  dialog.toggle();
+}
+
+
+// Save transition and climb times in seconds. UI provides times as "00:00"
+// format
 function save() {
-  t_min = $('#t_min').val();
-  t_sec = $('#t_sec').val();
-  c_min = $('#c_min').val();
-  c_sec = $('#c_sec').val();
+  var t_min = parseInt($('#t_time').val().substring(0,2));
+  var t_sec = parseInt($('#t_time').val().substring(3));
+
+  var c_min = parseInt($('#c_time').val().substring(0,2));
+  var c_sec = parseInt($('#c_time').val().substring(3));
+
+  // Calculate transition time and climb time from minutes and seconds
+  t_total_sec = t_min * 60 + t_sec;
+  c_total_sec = c_min * 60 + c_sec;
+
+  createTimers();
 }
 
 // Add event handlers

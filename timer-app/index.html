@@ -23,8 +23,13 @@
   <!-- Separate into some polymer elements -->
   <body fullbleed unresolved>
     <paper-dialog heading="Settings" transition="paper-dialog-transition-bottom">
-      <paper-input id="c_time" pattern="\d\d:\d\d" required error="(MM:SS)" label="Climbing Time" floatinglabel layout vertical></paper-input>
-      <paper-input id="t_time" pattern="\d\d:\d\d" required error="(MM:SS)" label="Transition Time" floatinglabel layout vertical></paper-input>
+      <div layout vertical>
+        <div layout horizontal>
+          <paper-input id="t_time" pattern="\d\d:\d\d" required error="MM:SS" label="Transition Time" floatinglabel flex three></paper-input>
+          <div flex></div>
+          <paper-input id="c_time" pattern="\d\d:\d\d" required error="MM:SS" label="Climbing Time" floatinglabel flex three></paper-input>
+        </div>
+      </div>
       <paper-button dismissive>Cancel</paper-button>
       <paper-button affirmative autofocus onclick="save()">Save</paper-button>
     </paper-dialog>
