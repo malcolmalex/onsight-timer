@@ -40,7 +40,8 @@
 
     #logo {
       position: absolute;
-      bottom 15px;
+      width: 175px;
+      bottom: 10px;
       left: 15px;
     }
 
