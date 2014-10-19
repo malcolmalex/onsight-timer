@@ -215,4 +215,5 @@ $('#stop').on('click', function() {
   oneMinuteWarningSubscription.dispose();
   tenSecondWarningSubscription.dispose();
   endClimbingSubscription.dispose();
+  veryFirstSubscription.dispose();
 });
