@@ -12,6 +12,7 @@ var mainStream;
 var transitionStream;
 var climbStream;
 var transitionActionsStream;
+var veryFirstElement;
 
 // Declare subscriptions that will be udpated in various event handlers
 var mainSubscription;
@@ -23,23 +24,26 @@ var BEGIN_CLIMBING = new Audio("audio/begin_climbing_edited.mp3");
 var BEGIN_TRANSITION = new Audio("audio/begin_transition_edited.mp3");
 var ONE_MINUTE = new Audio("audio/one_minute_edited.mp3");
 var TEN_SECONDS = new Audio("audio/ten_seconds_edited.mp3");
-var TIME_TIME = new Audio("audio/time_time_edited.mp3");
+var TIME_TIME_CLIMB = new Audio("audio/time_time_climb_edited.mp3");
+var TIME_TIME_TRANSITION = new Audio("audio/time_time_transition_edited.mp3");
 
 function createStreams() {
   // Create transition and climb streams with events 1000 ms apart, but
   // keep only transition time and climb time worth
   // Get the countdown by subtracting the seconds from the stream total
   // Uses total_sec + 1 to get a beginning event and ending event.
+  var numTransitionEvents = t_total_sec != 0 ? t_total_sec + 1 : 0
   transitionStream = Rx.Observable.timer(0,1000)
-        .take(t_total_sec + 1)
+        .take(numTransitionEvents)
         .map( function (x) {
-          return ["TRANSITION", (t_total_sec - x)];
+          return ["TRANSITION", (t_total_sec - x)]; // maybe rewrite as a .zip
         });
 
+  var numClimbEvents = c_total_sec + 1
   climbStream = Rx.Observable.timer(0,1000)
-        .take(c_total_sec + 1)
+        .take(numClimbEvents)
         .map( function (x) {
-          return ["CLIMB", (c_total_sec - x)];
+          return ["CLIMB", (c_total_sec - x)]; // maybe rewrite as a .zip
         });
 
   // Concatenate the streams together, and repeat. This enables each to be
@@ -47,12 +51,15 @@ function createStreams() {
   // understood behavior.
   mainStream = Rx.Observable.concat(transitionStream, climbStream).repeat();
 
+  veryFirstEvent = mainStream.take(1);
+
   transitionActionsStream = mainStream.filter(
     function (x) {
       if (x[0] === "TRANSITION" && x[1] === t_total_sec) return x;
     }
   );
 
+  // Delay for a few ms to allow end-climbing or end-transition to complete
   climbingBeginActionStream = mainStream.filter(
     function (x) {
       if (x[0] === "CLIMB" && x[1] === c_total_sec) return x;
@@ -71,20 +78,32 @@ function createStreams() {
     }
   );
 
-  endClimbingWarningStream = mainStream.filter(
+  endClimbingStream = mainStream.filter(
     function (x) {
       if (x[0] === "CLIMB" && x[1] == 0) return x;
     }
   );
-
-
 }
 
 function createSubscriptions() {
 
+  // At very beginning, if there is no transition time, play audio for
+  // begin climbing, else play audio for begin transition
+  veryFirstSubscription = veryFirstEvent.subscribe(
+    function (x) {
+      if (t_total_sec === 0) {
+        BEGIN_CLIMBING.play();
+      } else {
+        BEGIN_TRANSITION.play();
+      }
+    }
+  );
+
+  // Change time color and show "transition" under time. No need to play
+  // begin transition track here because it is tacked on to either the
+  // end-of-climbing or end-of-transition
   transitionSubscription = transitionActionsStream.subscribe(
     function (x) {
-      BEGIN_TRANSITION.play();
       $('#time').removeClass().addClass('transition');
       $('#tagline').text("Transition");
     },
@@ -92,9 +111,15 @@ function createSubscriptions() {
     function () {}
   );
 
+  // If there is a transition, play begin climbing track, otherwise play
+  // nothing and just update time color to black and remove "transition"
+  // tagline
   climbingBeginSubscription = climbingBeginActionStream.subscribe(
     function (x) {
-      BEGIN_CLIMBING.play();
+      console.log('Begin climbing (sec) - ' + (performance.now()/1000));
+      if (t_total_sec != 0) {
+        BEGIN_CLIMBING.play();
+      }
       $('#time').removeClass().addClass('climb');
       $('#tagline').text("");
     },
@@ -102,6 +127,7 @@ function createSubscriptions() {
     function () {}
   );
 
+  // Change time to red and play one minute warning
   oneMinuteWarningSubscription = oneMinuteWarningStream.subscribe(
     function (x) {
       ONE_MINUTE.play();
@@ -111,6 +137,7 @@ function createSubscriptions() {
     function () {}
   );
 
+  // Change time to red and play 10 second warning
   tenSecondWarningSubscription = tenSecondWarningStream.subscribe(
     function (x) {
       TEN_SECONDS.play();
@@ -120,9 +147,16 @@ function createSubscriptions() {
     function () {}
   );
 
-  endClimbingWarningSubscription = endClimbingWarningStream.subscribe(
+  // Call time at end of climbing, and tell people to transition
+  // or climb, as appropriate
+  endClimbingSubscription = endClimbingStream.subscribe(
     function (x) {
-      TIME_TIME.play();
+      console.log('  End climbing (sec) - ' + (performance.now()/1000));
+      if (t_total_sec === 0) {
+        TIME_TIME_CLIMB.play();
+      } else {
+        TIME_TIME_TRANSITION.play();
+      }
     },
     function (err) {},
     function () {}
@@ -133,19 +167,12 @@ function createSubscriptions() {
     function (x) {
       var timeString = numeral(x[1]).format('0:00:00').substr(2);
       $('#time').text(timeString);
-      console.log('Next: ' + x + '- ' + Date.now());
     },
-    function (err) {
-      console.log('Error: ' + err);
-    },
-    function () {
-      console.log('Completed');
-    }
+    function (err) {},
+    function () {}
   );
-  console.log("started timer");
-
-
 }
+
 // Open settings window
 // function toggleDialog(transition) {
 //   $('paper-dialog[transition=' + transition + ']').toggle();
@@ -175,17 +202,17 @@ function save() {
 // Add event handlers
 $('#play').on('click', function() {
   // TODO: add error toast for click play with no settings.
-
+  console.log("Timer START");
   createSubscriptions();
 
 });
 
 $('#stop').on('click', function() {
-  console.log("stoped timer");
+  console.log("Timer STOP");
   mainSubscription.dispose();
   transitionSubscription.dispose();
   climbingBeginSubscription.dispose();
   oneMinuteWarningSubscription.dispose();
   tenSecondWarningSubscription.dispose();
-  endClimbingWarningSubscription.dispose();
+  endClimbingSubscription.dispose();
 });
