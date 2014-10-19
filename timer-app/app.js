@@ -173,6 +173,16 @@ function createSubscriptions() {
   );
 }
 
+function disposeSubscriptions() {
+  mainSubscription.dispose();
+  transitionSubscription.dispose();
+  climbingBeginSubscription.dispose();
+  oneMinuteWarningSubscription.dispose();
+  tenSecondWarningSubscription.dispose();
+  endClimbingSubscription.dispose();
+  veryFirstSubscription.dispose();
+}
+
 // Open settings window
 // function toggleDialog(transition) {
 //   $('paper-dialog[transition=' + transition + ']').toggle();
@@ -181,7 +191,6 @@ function toggleDialog(transition) {
   var dialog = document.querySelector('paper-dialog[transition=' + transition + ']');
   dialog.toggle();
 }
-
 
 // Save transition and climb times in seconds. UI provides times as "00:00"
 // format
@@ -199,21 +208,13 @@ function save() {
   createStreams();
 }
 
-// Add event handlers
-$('#play').on('click', function() {
+function start() {
   // TODO: add error toast for click play with no settings.
   console.log("Timer START");
   createSubscriptions();
+}
 
-});
-
-$('#stop').on('click', function() {
+function stop() {
   console.log("Timer STOP");
-  mainSubscription.dispose();
-  transitionSubscription.dispose();
-  climbingBeginSubscription.dispose();
-  oneMinuteWarningSubscription.dispose();
-  tenSecondWarningSubscription.dispose();
-  endClimbingSubscription.dispose();
-  veryFirstSubscription.dispose();
-});
+  disposeSubscriptions();
+}
