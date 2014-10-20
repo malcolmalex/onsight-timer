@@ -6,7 +6,7 @@ var del = require('del');
 // Download atom-shell local to the project
 gulp.task('downloadatomshell', function(cb) {
     downloadatomshell({
-        version: '0.18.0',
+        version: '0.18.1',
         outputDir: 'build'
     }, cb);
 });
