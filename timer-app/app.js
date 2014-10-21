@@ -190,7 +190,7 @@ function disposeSubscriptions() {
 
 // Open settings window
 function toggleDialog(transition) {
-  var dialog = document.querySelector('paper-dialog[transition=' + transition + ']');
+  var dialog = document.querySelector('paper-dialog');
   dialog.toggle();
 }
 
@@ -199,11 +199,12 @@ function toggleDialog(transition) {
 function save() {
   var s = document.querySelector('#settings');
 
-  t_min = parseInt(s.t_time.substring(0,2));
-  t_sec = parseInt(s.t_time.substring(3));
+  // convert MM:SS to minutes and seconds integers
+  var t_min = parseInt(s.t_time.substring(0,2));
+  var t_sec = parseInt(s.t_time.substring(3));
 
-  c_min = parseInt(s.c_time.substring(0,2));
-  c_sec = parseInt(s.c_time.substring(3));
+  var c_min = parseInt(s.c_time.substring(0,2));
+  var c_sec = parseInt(s.c_time.substring(3));
 
   // Calculate transition time and climb time from minutes and seconds
   t_total_sec = t_min * 60 + t_sec;
@@ -213,7 +214,12 @@ function save() {
 }
 
 function start() {
-  // TODO: add error toast for click play with no settings.
+
+  // need to check for good settings, else document.querySelector.show('paper-toast')
+  if (!isNumber(t_total_sec) || !isNumber(c_total_sec)) {
+    document.querySelector('paper-toast').show();
+    return;
+  }
   console.log("Timer START");
   createSubscriptions();
 }
@@ -221,4 +227,9 @@ function start() {
 function stop() {
   console.log("Timer STOP");
   disposeSubscriptions();
+}
+
+// Utility for ensuring numeric transition and climbing times
+function isNumber(n){
+    return typeof(n) != "boolean" && !isNaN(n);
 }

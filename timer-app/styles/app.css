@@ -16,12 +16,22 @@
       margin-bottom: 0;
     }
 
+    paper-toast {
+      bottom: 0;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
     paper-dialog paper-button {
       font-weight: bold;
     }
 
     paper-button[autofocus] {
       color: #4285f4;
+    }
+
+    paper-fab {
+      background: gray;
     }
 
     #timeDisplay {

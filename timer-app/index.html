@@ -5,7 +5,6 @@
     <script src="components/platform/platform.js"></script>
 
     <!-- Import components -->
-    <!-- TODO: Import only what is needed -->
     <link rel="import" href="components/polymer/polymer.html">
     <link rel="import" href="components/paper-dialog/paper-dialog-transition.html">
     <link rel="import" href="components/paper-dialog/paper-dialog.html">
@@ -15,15 +14,15 @@
     <link rel="import" href="components/core-icons/av-icons.html">
     <link rel="import" href="components/paper-input/paper-input.html">
     <link rel="import" href="components/paper-fab/paper-fab.html">
+    <link rel="import" href="components/paper-toast/paper-toast.html">
 
     <link rel="stylesheet" href="styles/app.css">
 
     <title>USA Climbing Official Competition Timer</title>
   </head>
 
-  <!-- Separate into some polymer elements -->
   <body fullbleed unresolved>
-    <!-- Settings component -->
+    <!-- Settings -->
     <template id="settings" is="auto-binding">
       <paper-dialog heading="Settings" transition="paper-dialog-transition-bottom">
         <div layout vertical>
@@ -37,7 +36,7 @@
                           flex
                           three>
             </paper-input>
-            <div flex></div>
+            <span flex></span>
             <paper-input  pattern="\d\d:\d\d"
                           required
                           error="MM:SS"
@@ -49,11 +48,13 @@
             </paper-input>
           </div>
         </div>
-        <paper-button dismissive>Cancel</paper-button>
-        <paper-button affirmative autofocus onclick="save()">Save</paper-button>
+        <paper-fab affirmative autofocus mini icon="check" onclick="save()"></paper-fab>
       </paper-dialog>
+
+      <!-- Icon at top left-->
       <paper-icon-button icon="menu" onclick="toggleDialog('paper-dialog-transition-bottom')"></paper-icon-button>
     </template>
+
     <!-- Timer display -->
     <template id="timer" is="auto-binding">
       <div flex vertical center-justified layout center>
@@ -61,6 +62,7 @@
         <div id="taglineDisplay">{{tagline}}</div>
       </div>
     </template>
+
     <!-- Timer controls -->
     <div id="controls">
       <paper-fab id="play" mini icon="av:play-arrow" onclick="start()"></paper-fab>
@@ -68,6 +70,8 @@
     </div>
 
     <img id="logo" src="images/USAclimbing.png"></img>
+
+    <paper-toast text="You have not set transition or climbing time correctly"></paper-toast>
 
     <!-- Primary application logic -->
     <script src="app.js"></script>
