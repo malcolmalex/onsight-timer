@@ -38,6 +38,9 @@ gulp.task('run-build', ['downloadatomshell-build'], shell.task([
 
 // For testing the dist-approach using .asar files.  This is the
 // default
+// FIXME: These dist tasks do no good as long as main.js has a hard-
+// coded reference to the index.html in the directory as opposed to
+// .asar
 gulp.task('run-dist', ['dist'], shell.task([
     'dist/Atom.app/Contents/MacOS/Atom dist/timer-app.asar'
 ]));

@@ -27,6 +27,11 @@ var TEN_SECONDS = new Audio("audio/ten_seconds_edited.mp3");
 var TIME_TIME_CLIMB = new Audio("audio/time_time_climb_edited.mp3");
 var TIME_TIME_TRANSITION = new Audio("audio/time_time_transition_edited.mp3");
 
+var t = document.querySelector('#timer');
+t.time = "00:00";
+t.tagline = "Transition";
+t.state = "transition";
+
 function createStreams() {
   // Create transition and climb streams with events 1000 ms apart, but
   // keep only transition time and climb time worth
@@ -104,8 +109,8 @@ function createSubscriptions() {
   // end-of-climbing or end-of-transition
   transitionSubscription = transitionActionsStream.subscribe(
     function (x) {
-      $('#time').removeClass().addClass('transition');
-      $('#tagline').text("Transition");
+      t.state = "transition";
+      t.tagline = "Transition";
     },
     function (err) {},
     function () {}
@@ -120,8 +125,8 @@ function createSubscriptions() {
       if (t_total_sec != 0) {
         BEGIN_CLIMBING.play();
       }
-      $('#time').removeClass().addClass('climb');
-      $('#tagline').text("");
+      t.state = "climb";
+      t.tagline = "";
     },
     function (err) {},
     function () {}
@@ -131,7 +136,7 @@ function createSubscriptions() {
   oneMinuteWarningSubscription = oneMinuteWarningStream.subscribe(
     function (x) {
       ONE_MINUTE.play();
-      $('#time').removeClass().addClass('warning');
+      t.state = "warning";
     },
     function (err) {},
     function () {}
@@ -141,7 +146,7 @@ function createSubscriptions() {
   tenSecondWarningSubscription = tenSecondWarningStream.subscribe(
     function (x) {
       TEN_SECONDS.play();
-      $('#time').removeClass().addClass('warning');
+      t.state = "warning";
     },
     function (err) {},
     function () {}
@@ -166,7 +171,7 @@ function createSubscriptions() {
   mainSubscription = mainStream.subscribe(
     function (x) {
       var timeString = numeral(x[1]).format('0:00:00').substr(2);
-      $('#time').text(timeString);
+      t.time = timeString;
     },
     function (err) {},
     function () {}
@@ -184,9 +189,6 @@ function disposeSubscriptions() {
 }
 
 // Open settings window
-// function toggleDialog(transition) {
-//   $('paper-dialog[transition=' + transition + ']').toggle();
-// }
 function toggleDialog(transition) {
   var dialog = document.querySelector('paper-dialog[transition=' + transition + ']');
   dialog.toggle();
@@ -195,11 +197,13 @@ function toggleDialog(transition) {
 // Save transition and climb times in seconds. UI provides times as "00:00"
 // format
 function save() {
-  var t_min = parseInt($('#t_time').val().substring(0,2));
-  var t_sec = parseInt($('#t_time').val().substring(3));
+  var s = document.querySelector('#settings');
 
-  var c_min = parseInt($('#c_time').val().substring(0,2));
-  var c_sec = parseInt($('#c_time').val().substring(3));
+  t_min = parseInt(s.t_time.substring(0,2));
+  t_sec = parseInt(s.t_time.substring(3));
+
+  c_min = parseInt(s.c_time.substring(0,2));
+  c_sec = parseInt(s.c_time.substring(3));
 
   // Calculate transition time and climb time from minutes and seconds
   t_total_sec = t_min * 60 + t_sec;
