@@ -13,6 +13,7 @@ require('crash-reporter').start();
 var mainWindow = null;
 
 // Quit when all windows are closed.
+// TODO: Add in windows quit here.
 app.on('window-all-closed', function() {
   if (process.platform != 'darwin')
     app.quit();
@@ -25,7 +26,8 @@ app.on('ready', function() {
   mainWindow = new BrowserWindow({width: 800, height: 600});
 
   // and load the index.html of the app.
-  mainWindow.loadUrl('file://' + __dirname + '/index.html');
+  mainWindow.loadUrl('asar:' + __dirname + '/index.html');
+  //mainWindow.loadUrl('file://' + __dirname + '/index.html');
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {

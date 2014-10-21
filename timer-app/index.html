@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <!-- Load platform.js for polyfill support -->
     <script src="components/platform/platform.js"></script>
@@ -22,6 +22,7 @@
 
   <!-- Separate into some polymer elements -->
   <body fullbleed unresolved>
+    <!-- Settings component -->
     <paper-dialog heading="Settings" transition="paper-dialog-transition-bottom">
       <div layout vertical>
         <div layout horizontal>
@@ -34,14 +35,18 @@
       <paper-button affirmative autofocus onclick="save()">Save</paper-button>
     </paper-dialog>
     <paper-icon-button icon="menu" onclick="toggleDialog('paper-dialog-transition-bottom')"></paper-icon-button>
+    <!-- Timer display component -->
     <div flex vertical center-justified layout center>
       <div id="time" class="climb">00:00</div>
       <div id="tagline">Transition</div>
     </div>
+
+    <!-- Timer controls component -->
     <div id="controls">
       <paper-fab id="play" mini icon="av:play-arrow" onclick="start()"></paper-fab>
       <paper-fab id="stop" mini icon="av:stop" onclick="stop()"></paper-fab>
     </div>
+
     <img id="logo" src="images/USAclimbing.png"></img>
     <!-- Utilities, tock for timer, zepto as lighter jquery -->
     <script src="components/zepto/zepto.min.js"></script>
