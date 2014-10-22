@@ -3,6 +3,7 @@
 // polymer. This file sets up atom shell.
 
 var app = require('app');  // Module to control application life.
+var os = require('os');
 var BrowserWindow = require('browser-window');  // Module to create native browser window.
 
 // Report crashes to our server.
@@ -12,8 +13,15 @@ var BrowserWindow = require('browser-window');  // Module to create native brows
 // be closed automatically when the javascript object is GCed.
 var mainWindow = null;
 
+// Check 2nd argument (filename) of command and see if .asar or just a folder
+// commands look like "atom timer-app.asar" or "atom timer-app"
+var protocol = 'file';
+if (process.argv[1].indexOf('.asar') > -1) {
+    protocol = 'asar';
+}
+
 // Quit when all windows are closed.
-// TODO: Add in windows quit here.
+// FIXME: quit not working.
 app.on('window-all-closed', function() {
   if (process.platform != 'darwin')
     app.quit();
@@ -22,12 +30,14 @@ app.on('window-all-closed', function() {
 // This method will be called when atom-shell has done everything
 // initialization and ready for creating browser windows.
 app.on('ready', function() {
+
   // Create the browser window.
   mainWindow = new BrowserWindow({width: 800, height: 600});
 
-  // and load the index.html of the app.
-  //mainWindow.loadUrl('asar:' + __dirname + '/index.html');
-  mainWindow.loadUrl('file://' + __dirname + '/index.html');
+  // and load the index.html of the app, either in asar or regular file
+  var url = protocol + '://' + __dirname + '/index.html';
+  console.log(url)
+  mainWindow.loadUrl(url);
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {

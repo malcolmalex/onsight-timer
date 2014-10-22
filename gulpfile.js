@@ -3,10 +3,34 @@ var gulp = require('gulp');
 var shell = require('gulp-shell');
 var downloadatomshell = require('gulp-download-atom-shell');
 var del = require('del');
+var os = require('os');
+var path = require('path');
 
 var atomShellVersion = '0.18.1';
+var platform = os.platform();
 
-// Download atom-shell local to the project for dev
+var runBuildCmd;
+var runDistCmd;
+
+// Build the commands that will run the app, accounting for platform differences
+// and whether we want to run from the dev form (timer-app folder) or dist form
+// (.asar archive)
+switch(platform) {
+  case 'darwin':
+    runBuildCmd = 'build/Atom.app/Contents/MacOS/Atom timer-app';
+    runDistCmd = 'dist/Atom.app/Contents/MacOS/Atom dist/timer-app.asar';
+    break;
+  case 'win32':
+    runBuildCmd = 'build\\atom.exe timer-app';
+    runDistCmd =  'dist\\atom.exe dist\\timer-app.asar';
+    break;
+  default:
+    console.log("Platform not supported. Needs to run on windows or mac.");
+    process.exit(1);
+    break;
+}
+
+// Download atom-shell local to the project - to the build folder for dev
 gulp.task('downloadatomshell-build', function(cb) {
     downloadatomshell({
         version: atomShellVersion,
@@ -14,7 +38,7 @@ gulp.task('downloadatomshell-build', function(cb) {
     }, cb);
 });
 
-// Download atom-shell for dist with the .asar file
+// Download atom-shell local to the project - to dist folder for distributables
 gulp.task('downloadatomshell-dist', function(cb) {
     downloadatomshell({
         version: atomShellVersion,
@@ -22,35 +46,25 @@ gulp.task('downloadatomshell-dist', function(cb) {
     }, cb);
 });
 
-// Create the .asar file.  Assumes you've done
-// npm install -g asar
+// Generic dev build task
+gulp.task('build',['downloadatomshell-build']);
+
+// Create the .asar file.  Assumes you've done npm install -g asar
 gulp.task('dist', ['downloadatomshell-dist'], shell.task([
-  'asar pack timer-app dist/timer-app.asar'
-
+  path.normalize('asar pack timer-app dist/timer-app.asar')
 ]));
 
-// Default task does the build, dependent on having atom-shell in place
-// TODO: Generalize to other OSs
+// Run the local build.  In development using this approach, you can just make
+// changes to the application, and hit command-R or ctrl-R to refresh without
+// having to put a watch on files or re-run the build task
+gulp.task('run-build', ['downloadatomshell-build'], shell.task([ runBuildCmd ]));
 
-gulp.task('run-build', ['downloadatomshell-build'], shell.task([
-    'build/Atom.app/Contents/MacOS/Atom timer-app'
-]));
+// Run the local dist (.asar approach)
+gulp.task('run-dist', ['dist'], shell.task([ runDistCmd ]));
 
-// For testing the dist-approach using .asar files.  This is the
-// default
-// FIXME: These dist tasks do no good as long as main.js has a hard-
-// coded reference to the index.html in the directory as opposed to
-// .asar
-gulp.task('run-dist', ['dist'], shell.task([
-    'dist/Atom.app/Contents/MacOS/Atom dist/timer-app.asar'
-]));
-
-// Run-build uses the folder (not the .asar file), meaning you can
-// just command-R to refresh while in development, without having to
-//re-run a gulp task.
-gulp.task('default', ['run-build']);
-
-// Delete the build folder to clean
+// Delete the build and dist folder
 gulp.task('clean', function(cb) {
   del(['build', 'dist'], cb);
 });
+
+gulp.task('default', ['build']);
