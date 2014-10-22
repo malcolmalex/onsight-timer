@@ -64,7 +64,6 @@ function createStreams() {
     }
   );
 
-  // Delay for a few ms to allow end-climbing or end-transition to complete
   climbingBeginActionStream = mainStream.filter(
     function (x) {
       if (x[0] === "CLIMB" && x[1] === c_total_sec) return x;
