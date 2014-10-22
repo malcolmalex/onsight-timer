@@ -20,12 +20,12 @@ var transitionSubscription;
 var climbSubscription;
 
 // Setup audio files for notifying climbers of important times
-var BEGIN_CLIMBING = new Audio("audio/begin_climbing_edited.mp3");
-var BEGIN_TRANSITION = new Audio("audio/begin_transition_edited.mp3");
-var ONE_MINUTE = new Audio("audio/one_minute_edited.mp3");
-var TEN_SECONDS = new Audio("audio/ten_seconds_edited.mp3");
-var TIME_TIME_CLIMB = new Audio("audio/time_time_climb_edited.mp3");
-var TIME_TIME_TRANSITION = new Audio("audio/time_time_transition_edited.mp3");
+var BEGIN_CLIMBING = new Audio("audio/climbers_begin_1.mp3");
+var BEGIN_TRANSITION = new Audio("audio/begin_transition_1.mp3");
+var ONE_MINUTE = new Audio("audio/one_minute_1.mp3");
+var TEN_SECONDS = new Audio("audio/ten_seconds_1.mp3");
+var TIME_TIME_CLIMB = new Audio("audio/time_begin_climbing_1.mp3");
+var TIME_TIME_TRANSITION = new Audio("audio/time_begin_transition_1.mp3");
 
 var t = document.querySelector('#timer');
 t.time = "00:00";
