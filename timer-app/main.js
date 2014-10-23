@@ -15,6 +15,11 @@ var mainWindow = null;
 
 // Check 2nd argument (filename) of command and see if .asar or just a folder
 // commands look like "atom timer-app.asar" or "atom timer-app"
+// TODO: Can't just double-click the icon in the dist folder as that doesn't
+// pass in the parameter for asar archive, as it's been installed in Resources
+// and from the command line it doesn't need to be there!
+// Running via the gulp-file is the only way at the moment to run the dist
+// version.
 var protocol = 'file';
 if (process.argv[1].indexOf('.asar') > -1) {
     protocol = 'asar';

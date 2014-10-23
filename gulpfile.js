@@ -11,18 +11,23 @@ var platform = os.platform();
 
 var runBuildCmd;
 var runDistCmd;
+var atomResourcesPath;
 
 // Build the commands that will run the app, accounting for platform differences
 // and whether we want to run from the dev form (timer-app folder) or dist form
 // (.asar archive)
 switch(platform) {
   case 'darwin':
+    atomResourcesPath = 'dist/Atom.app/Contents/Resources'
+
     runBuildCmd = 'build/Atom.app/Contents/MacOS/Atom timer-app';
-    runDistCmd = 'dist/Atom.app/Contents/MacOS/Atom dist/timer-app.asar';
+    runDistCmd = 'dist/Atom.app/Contents/MacOS/Atom ' + atomResourcesPath + '/app.asar';
     break;
   case 'win32':
+    atomResourcesPath = path.normalize('dist/resources');
+
     runBuildCmd = 'build\\atom.exe timer-app';
-    runDistCmd =  'dist\\atom.exe dist\\timer-app.asar';
+    runDistCmd =  'dist\\atom.exe' + atomResourcesPath + '\\app.asar';
     break;
   default:
     console.log("Platform not supported. Needs to run on windows or mac.");
@@ -51,7 +56,7 @@ gulp.task('build',['downloadatomshell-build']);
 
 // Create the .asar file.  Assumes you've done npm install -g asar
 gulp.task('dist', ['downloadatomshell-dist'], shell.task([
-  path.normalize('asar pack timer-app dist/timer-app.asar')
+  path.normalize('asar pack timer-app ' + path.join(atomResourcesPath, 'app.asar'))
 ]));
 
 // Run the local build.  In development using this approach, you can just make
