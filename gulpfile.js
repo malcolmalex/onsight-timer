@@ -5,6 +5,7 @@ var downloadatomshell = require('gulp-download-atom-shell');
 var del = require('del');
 var os = require('os');
 var path = require('path');
+var vulcanize = require('gulp-vulcanize');
 
 var atomShellVersion = '0.18.1';
 var platform = os.platform();
@@ -51,6 +52,22 @@ gulp.task('downloadatomshell-dist', function(cb) {
     }, cb);
 });
 
+// TODO: Need to experiment with this and see if can get filesize down.  Network
+// trips are not important in this case since it's all local. I'm hoping this
+// only pulls in the dependencies, not everything inside the components
+// directory.
+
+// But, this likely doesn't pull in anything not in an html import, like rxjs,
+// numeralsjs, other libraries
+gulp.task('vulcanize', function () {
+    return gulp.src('timer-app/index.html')
+        .pipe(vulcanize({
+            dest: 'dist',
+            strip: true
+        }))
+        .pipe(gulp.dest('dist'));
+});
+
 // Generic dev build task
 gulp.task('build',['downloadatomshell-build']);
 
@@ -71,5 +88,6 @@ gulp.task('run-dist', ['dist'], shell.task([ runDistCmd ]));
 gulp.task('clean', function(cb) {
   del(['build', 'dist'], cb);
 });
+
 
 gulp.task('default', ['build']);
