@@ -63,7 +63,7 @@ gulp.task('vulcanize', function () {
     return gulp.src('timer-app/index.html')
         .pipe(vulcanize({
             dest: 'dist',
-            strip: true
+            inline: true
         }))
         .pipe(gulp.dest('dist'));
 });

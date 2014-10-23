@@ -1,6 +1,3 @@
-var Rx = require('./components/rxjs/dist/rx.lite.js');
-var numeral = require('./components/numeraljs/numeral.js');
-
 // Declare transition and climb time in seconds
 //TODO: Save these to local storage eventually
 var t_total_sec;
@@ -20,12 +17,12 @@ var transitionSubscription;
 var climbSubscription;
 
 // Setup audio files for notifying climbers of important times
-var BEGIN_CLIMBING = new Audio("audio/climbers_begin_1.mp3");
-var BEGIN_TRANSITION = new Audio("audio/begin_transition_1.mp3");
-var ONE_MINUTE = new Audio("audio/one_minute_1.mp3");
-var TEN_SECONDS = new Audio("audio/ten_seconds_1.mp3");
-var TIME_TIME_CLIMB = new Audio("audio/time_begin_climbing_1.mp3");
-var TIME_TIME_TRANSITION = new Audio("audio/time_begin_transition_1.mp3");
+var BEGIN_CLIMBING = new Audio("audio/begin_climbing.mp3");
+var BEGIN_TRANSITION = new Audio("audio/begin_transition.mp3");
+var ONE_MINUTE = new Audio("audio/one_minute.mp3");
+var TEN_SECONDS = new Audio("audio/ten_seconds.mp3");
+var TIME_CLIMBING = new Audio("audio/time_climbing.mp3");
+var TIME_TRANSITION = new Audio("audio/time_transition.mp3");
 
 var t = document.querySelector('#timer');
 t.time = "00:00";
@@ -157,9 +154,9 @@ function createSubscriptions() {
     function (x) {
       console.log('  End climbing (sec) - ' + (performance.now()/1000));
       if (t_total_sec === 0) {
-        TIME_TIME_CLIMB.play();
+        TIME_CLIMBING.play();
       } else {
-        TIME_TIME_TRANSITION.play();
+        TIME_TRANSITION.play();
       }
     },
     function (err) {},
