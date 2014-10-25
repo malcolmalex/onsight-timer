@@ -17,6 +17,7 @@ announcements corresponding to the following times frames:
 Font colors and announcements are in accordance with the USA Climbing rule book
 for the 2015 season.
 
-h1. Systems supported
+Systems supported
+-----------------
 
 The OnSight Timer can be used on Mac OS X and Windows machines.
