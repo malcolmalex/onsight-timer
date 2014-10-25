@@ -26,8 +26,9 @@
       font-weight: bold;
     }
 
-    paper-button[autofocus] {
-      color: #4285f4;
+    paper-button.hover:hover {
+      background: #eee;
+      color: #fffffff
     }
 
     paper-fab {

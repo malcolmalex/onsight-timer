@@ -1,4 +1,6 @@
 // Require various gulp and node plugins
+var atomShellVersion = '0.18.2';
+
 var gulp = require('gulp');
 var shell = require('gulp-shell');
 var downloadatomshell = require('gulp-download-atom-shell');
@@ -7,9 +9,11 @@ var os = require('os');
 var path = require('path');
 var vulcanize = require('gulp-vulcanize');
 
-var atomShellVersion = '0.18.1';
+// Determine platform, as running the applicaiton requires a different
+// command for mac vs. windows
 var platform = os.platform();
 
+// Declare some variables for building run commands
 var runBuildCmd;
 var runDistCmd;
 var atomResourcesPath;

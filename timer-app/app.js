@@ -1,10 +1,16 @@
+// Setup audio files for notifying climbers of important times
+var BEGIN_CLIMBING = new Audio("audio/begin_climbing.mp3");
+var BEGIN_TRANSITION = new Audio("audio/begin_transition.mp3");
+var ONE_MINUTE = new Audio("audio/one_minute.mp3");
+var TEN_SECONDS = new Audio("audio/ten_seconds.mp3");
+var TIME_CLIMBING = new Audio("audio/time_climbing.mp3");
+var TIME_TRANSITION = new Audio("audio/time_transition.mp3");
+
 // Declare transition and climb time in seconds
-//TODO: Save these to local storage eventually
 var t_total_sec;
 var c_total_sec;
 
 // Declare streams (Observables)
-// TODO: Horrible organization here with so much global state
 var mainStream;
 var transitionStream;
 var climbStream;
@@ -16,14 +22,7 @@ var mainSubscription;
 var transitionSubscription;
 var climbSubscription;
 
-// Setup audio files for notifying climbers of important times
-var BEGIN_CLIMBING = new Audio("audio/begin_climbing.mp3");
-var BEGIN_TRANSITION = new Audio("audio/begin_transition.mp3");
-var ONE_MINUTE = new Audio("audio/one_minute.mp3");
-var TEN_SECONDS = new Audio("audio/ten_seconds.mp3");
-var TIME_CLIMBING = new Audio("audio/time_climbing.mp3");
-var TIME_TRANSITION = new Audio("audio/time_transition.mp3");
-
+// Initial UI setup
 var t = document.querySelector('#timer');
 t.time = "00:00";
 t.tagline = "Transition";
