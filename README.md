@@ -27,7 +27,7 @@ Download the latest .zip file here for your operating system, and unzip to a con
 Installation
 ------------
 
-Find that folder you downloaded and unzipped and on Windows double-click the <whatever> icon, and on Mac double-click the <whatever> icon.
+Find that folder you unzipped and on Windows double-click the <whatever> icon, and on Mac double-click the <whatever> icon.
 
 Getting Started
 ---------------
@@ -36,15 +36,12 @@ The main application screen is shown below:
 
 
 1. Click the menu in the top left corner, and set the transition time and climbing time:
-
-
-> Enter 00:00 for the transition time to just repeat the climbing phase.
-
-2. When ready to start, click the "Play" button in the bottom left corner, and the transition/climb cycle you've set up will repeat.
-
-> Important: Clicking "Play" again will restart the timer!
-
+2. When ready to start, click the "Play" button in the bottom left corner, and the transition/climb cycle you've set up will repeat. _Note that clicking play at any point will *restart* the timer!_
 3. Click the "Stop" button when you are done.
+
+> To use just a climbing phase, enter 00:00 for the transition time.
+
+
 
 Systems supported
 -----------------
