@@ -19,32 +19,45 @@ announcements corresponding to the following times frames:
 Font colors and announcements are in accordance with the USA Climbing rule book
 for the 2015 season.
 
-Downloads and Installation
---------------------------
+Download
+--------
+
+Download the latest .zip file here for your operating system, and unzip to a convenient location.  
+
+Installation
+------------
+
+Find that folder you downloaded and unzipped and on Windows double-click the <whatever> icon, and on Mac double-click the <whatever> icon.
 
 Getting Started
 ---------------
 
-1. Unzip the file downloaded above to a convenient location on your hard drive.
-2. Navigate to that location via Mac's Finder or Windows Explorer, and double-
-click the "run" application. You will see the following screen; the settings menu is in the top left corner, and the play/stop buttons are in the bottom right corner
-3. Enter settings for transition time and climbing time. Only minutes and seconds are allowed, in a 00:00 format.
+The main application screen is shown below:
 
-Screenshot #1
 
-Click the "check" icon in the bottom right to save.
+1. Click the menu in the top left corner, and set the transition time and climbing time:
 
-4. Click on the "Play" button to start the timer, and when desired, click "Stop" to end the competition.
 
-> Note that anytime play is hit, the whole cycle will restart.
+> Enter 00:00 for the transition time to just repeat the climbing phase.
+
+2. When ready to start, click the "Play" button in the bottom left corner, and the transition/climb cycle you've set up will repeat.
+
+> Important: Clicking "Play" again will restart the timer!
+
+3. Click the "Stop" button when you are done.
 
 Systems supported
 -----------------
 
-The OnSight Timer can be used on Mac OS X and Windows machines.
+The OnSight Timer can be used on Mac OS X and Windows.
 
 License
 -------
 
 Contributing
 ------------
+
+Acknowledgements
+----------------
+
+Thanks to Connie Lightner for documenting the rules, and to Kevin and Marcey Rader-Rhodenbaugh for making the audio recordings.
