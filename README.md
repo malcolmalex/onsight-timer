@@ -37,8 +37,11 @@ The main application screen is shown below:
 ![Main Window](https://github.com/malcolmalex/onsight-timer/raw/master/doc/OnSight-Timer-main-window.png)
 
 1. Click the menu in the top left corner, and set the transition time and climbing time. Time is entered as MM:SS (minutes:seconds).
-2. When ready to start, click the "Play" button in the bottom left corner, and the transition/climb cycle you've set up will repeat. _Note that clicking play at any point will **restart** the timer!_
-3. Click the "Stop" button when you are done.
+
+![Settings](https://github.com/malcolmalex/onsight-timer/raw/master/doc/OnSight-Timer-Settings.png)
+
+2. When ready to start, click the "Play" button in the bottom right corner, and the transition/climb cycle you've set up will repeat. _Note that clicking play at any point will **restart** the timer!_
+3. Click the "Stop" button at the bottom right when you are done.
 
 > To use just a climbing phase, enter 00:00 for the transition time.
 
