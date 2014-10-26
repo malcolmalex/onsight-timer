@@ -34,7 +34,7 @@ Getting Started
 
 The main application screen is shown below:
 
-![Main Window](https://github.com/malcolmalex/onsight-timer/tree/master/doc/OnSight-Timer-main-window.png)
+![Main Window](https://github.com/malcolmalex/onsight-timer/raw/master/doc/OnSight-Timer-main-window.png)
 
 1. Click the menu in the top left corner, and set the transition time and climbing time. Time is entered as MM:SS (minutes:seconds).
 2. When ready to start, click the "Play" button in the bottom left corner, and the transition/climb cycle you've set up will repeat. _Note that clicking play at any point will **restart** the timer!_
