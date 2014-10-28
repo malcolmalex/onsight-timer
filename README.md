@@ -1,10 +1,10 @@
-OnSight-timer
+OnSight-Timer
 =============
 
 The OnSight-Timer provides rock climbing competition organizers with a way
 to display a countdown timer that gives competitors clear indications as to
 the time left in transitions or climbing. It includes all the visual and audio cues
-required by the USAC rule book for the 2015 season.
+required by the [USAC rule book](http://usaclimbing.net/rockcomps/resources/2014-1010%20USA%20Climbing%20Rule%20Book.pdf). 
 
 Users enter a transition time (optional) and a climbing time. These phases are repeated
 until the organizers stop the timer. Audio and visual cues notify climbers of the
