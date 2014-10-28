@@ -53,14 +53,60 @@
 	<key>Creator</key>
 	<string>Malcolm</string>
 	<key>DisplayScale</key>
-	<string>1 0/72 in = 1 0/72 in</string>
+	<string>1 0/72 in = 1.0000 in</string>
 	<key>GraphDocumentVersion</key>
 	<integer>8</integer>
 	<key>GraphicsList</key>
 	<array>
 		<dict>
 			<key>Bounds</key>
-			<string>{{279, 342}, {432, 168}}</string>
+			<string>{{45, 346}, {189, 14}}</string>
+			<key>Class</key>
+			<string>ShapedGraphic</string>
+			<key>FitText</key>
+			<string>Vertical</string>
+			<key>Flow</key>
+			<string>Resize</string>
+			<key>ID</key>
+			<integer>58</integer>
+			<key>Shape</key>
+			<string>Rectangle</string>
+			<key>Style</key>
+			<dict>
+				<key>fill</key>
+				<dict>
+					<key>Draws</key>
+					<string>NO</string>
+				</dict>
+				<key>shadow</key>
+				<dict>
+					<key>Draws</key>
+					<string>NO</string>
+				</dict>
+				<key>stroke</key>
+				<dict>
+					<key>Draws</key>
+					<string>NO</string>
+				</dict>
+			</dict>
+			<key>Text</key>
+			<dict>
+				<key>Pad</key>
+				<integer>0</integer>
+				<key>Text</key>
+				<string>{\rtf1\ansi\ansicpg1252\cocoartf1343\cocoasubrtf140
+\cocoascreenfonts1{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc
+
+\f0\fs24 \cf0 \ul \ulc0 Audio Events and/or UI Updates}</string>
+				<key>VerticalPad</key>
+				<integer>0</integer>
+			</dict>
+		</dict>
+		<dict>
+			<key>Bounds</key>
+			<string>{{261, 342}, {432, 182}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>FitText</key>
@@ -91,8 +137,6 @@
 			</dict>
 			<key>Text</key>
 			<dict>
-				<key>Align</key>
-				<integer>0</integer>
 				<key>Pad</key>
 				<integer>0</integer>
 				<key>Text</key>
@@ -101,9 +145,11 @@
 {\colortbl;\red255\green255\blue255;}
 {\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid1\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid1}}
 {\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}}
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc
 
-\f0\fs24 \cf0 The Rules:\
+\f0\fs24 \cf0 \ul \ulc0 Basic Sequence\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf0 \ulnone \
 \pard\tx220\tx720\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li720\fi-720\pardirnatural
 \ls1\ilvl0\cf0 {\listtext	\'95	}Climbing sessions may be setup in one of two ways: a) alternating transition and climbing phases, or b) repeated climbing phases.\
 {\listtext	\'95	}Transition phases START with a "Begin Transition" announcement, except when the previous phase was a climbing phase. In this case, the transition phase starts with a combination message: "Time is Up. Begin Transition".\
@@ -116,7 +162,7 @@
 		</dict>
 		<dict>
 			<key>Bounds</key>
-			<string>{{144, 459}, {153, 14}}</string>
+			<string>{{99, 477}, {153, 14}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>FitText</key>
@@ -171,7 +217,7 @@
 		</dict>
 		<dict>
 			<key>Bounds</key>
-			<string>{{144, 432}, {153, 14}}</string>
+			<string>{{99, 450}, {153, 14}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>FitText</key>
@@ -226,7 +272,7 @@
 		</dict>
 		<dict>
 			<key>Bounds</key>
-			<string>{{144, 405}, {153, 14}}</string>
+			<string>{{99, 423}, {153, 14}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>FitText</key>
@@ -281,7 +327,7 @@
 		</dict>
 		<dict>
 			<key>Bounds</key>
-			<string>{{144, 351}, {153, 14}}</string>
+			<string>{{99, 369}, {153, 14}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>FitText</key>
@@ -336,7 +382,7 @@
 		</dict>
 		<dict>
 			<key>Bounds</key>
-			<string>{{144, 378}, {153, 14}}</string>
+			<string>{{99, 396}, {153, 14}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>FitText</key>
@@ -391,7 +437,7 @@
 		</dict>
 		<dict>
 			<key>Bounds</key>
-			<string>{{99, 459}, {18, 18}}</string>
+			<string>{{54, 477}, {18, 18}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>ID</key>
@@ -423,7 +469,7 @@
 		</dict>
 		<dict>
 			<key>Bounds</key>
-			<string>{{99, 405}, {18, 18}}</string>
+			<string>{{54, 423}, {18, 18}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>ID</key>
@@ -455,7 +501,7 @@
 		</dict>
 		<dict>
 			<key>Bounds</key>
-			<string>{{99, 432}, {18, 18}}</string>
+			<string>{{54, 450}, {18, 18}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>ID</key>
@@ -487,7 +533,7 @@
 		</dict>
 		<dict>
 			<key>Bounds</key>
-			<string>{{90, 378}, {27, 18}}</string>
+			<string>{{45, 396}, {27, 18}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>ID</key>
@@ -519,7 +565,7 @@
 		</dict>
 		<dict>
 			<key>Bounds</key>
-			<string>{{90, 351}, {27, 18}}</string>
+			<string>{{45, 369}, {27, 18}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>ID</key>
@@ -1559,7 +1605,7 @@
 	<key>MasterSheets</key>
 	<array/>
 	<key>ModificationDate</key>
-	<string>2014-10-25 04:32:16 +0000</string>
+	<string>2014-10-28 23:11:08 +0000</string>
 	<key>Modifier</key>
 	<string>Malcolm</string>
 	<key>NotesVisible</key>
