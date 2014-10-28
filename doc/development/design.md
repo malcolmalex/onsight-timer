@@ -1,5 +1,5 @@
 Application Design
-------------------
+==================
 
 OnSight Timer is meant to satisfy a couple of requirements:
 - Cross-platform desktop application (one codebase for mac and windows)
@@ -20,7 +20,7 @@ application is shut down.
 See the code comments for further detail.
 
 Cross-platform Desktop Application
-==================================
+----------------------------------
 
 OnSight Timer is built on top of [Atom-shell](https://github.com/atom/atom-shell), 
 which is basically a combination of Chromium and NodeJS. Applications are written 
@@ -28,7 +28,7 @@ in HTML, CSS, Javascript, but run as a desktop application, with most of the ben
 of greater access to local resources.
 
 Web Technologies
-================
+----------------
 
 This application leverages [Polymer](http://polymer-project.org) core and paper elements, or web components.
 Polymer is a set of polyfils and technologies that implement a number of the
@@ -40,7 +40,7 @@ event streams, and [RxJS](https://github.com/Reactive-Extensions/RxJS) is used t
 and maintain various cycles of events and the responses to those events.
 
 Ease of Maintenance and Update
-==============================
+------------------------------
 
 This application has no loops, using event streams to abstract the timing
 cycles. See the code for comments on the use of RxJS Observables for event
