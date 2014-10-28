@@ -13,6 +13,8 @@ Build
   * Run `gulp run-build` for development testing. Command-R on mac will refresh the application without having to restart.
   * Run `gulp run-dist` to produce and run from an asar archive, which is the way the main application code is distributed at releases.
 
+Design information is located [here](design.md).
+
 Contributing
 ------------
 This project uses the basic fork/pull model, and follows some basic rules:
