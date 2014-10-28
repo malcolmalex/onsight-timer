@@ -56,7 +56,7 @@ Copyright 2014 by Malcolm Alexander. OnSight Timer is released under the MIT lic
 Contributing
 ------------
 
-OnSight-Timer is open source and welcome's contributions. See [Contributing](doc/contributing.md) for more info.
+OnSight-Timer is open source and welcome's contributions. See [Contributing](doc/development/contributing.md) for more info.
 
 Acknowledgements
 ----------------
