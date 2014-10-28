@@ -1,14 +1,14 @@
 Prepare your environment
 ------------------------
 
-1. Install nodejs to get npm, node package manager.
+1. Install [NodeJS](http://nodejs.org) to get npm, node package manager.
 
 Build
 -----
 
 1. Clone the repository.
 2. Run npm install to install the development dependencies.
-3. This project uses GulpJS for builds ...
+3. This project uses [GulpJS](http://gulpjs.com) for builds ...
   * Run `gulp` to do the basic build
   * Run `gulp run-build` for development testing. Command-R on mac will refresh the application without having to restart.
   * Run `gulp run-dist` to produce and run from an asar archive, which is the way the main application code is distributed at releases.
