@@ -116,7 +116,7 @@ function createSubscriptions() {
   // tagline
   climbingBeginSubscription = climbingBeginActionStream.subscribe(
     function (x) {
-      console.log('Begin climbing (sec) - ' + (performance.now()/1000));
+      //console.log('Begin climbing (sec) - ' + (performance.now()/1000));
       if (t_total_sec != 0) {
         BEGIN_CLIMBING.play();
       }
@@ -151,7 +151,7 @@ function createSubscriptions() {
   // or climb, as appropriate
   endClimbingSubscription = endClimbingStream.subscribe(
     function (x) {
-      console.log('  End climbing (sec) - ' + (performance.now()/1000));
+      //console.log('  End climbing (sec) - ' + (performance.now()/1000));
       if (t_total_sec === 0) {
         TIME_CLIMBING.play();
       } else {
