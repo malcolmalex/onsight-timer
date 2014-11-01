@@ -108,13 +108,6 @@ gulp.task('asar', ['copy-static-assets'], shell.task([
   path.normalize('asar pack dist/timer-app dist/timer-app.asar')
 ]));
 
-// FIXME: barfs on Atom directory somewhere
-gulp.task('dist', ['asar'], function () {
-  gulp.src(['dist/Atom.app/**', 'timer-app.asar'])
-    .pipe(zip('timer-app.zip'))
-    .pipe(gulp.dest('dist'));
-});
-
 // Run the local build.  In development using this approach, you can just make
 // changes to the application, and hit command-R or ctrl-R to refresh without
 // having to put a watch on files or re-run the build task
