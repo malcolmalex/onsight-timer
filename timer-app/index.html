@@ -23,7 +23,7 @@
 
   <body fullbleed unresolved>
     <!-- Settings -->
-    <template id="settings" is="auto-binding">
+    <template id="timer-settings" is="auto-binding">
       <paper-dialog heading="Settings" transition="paper-dialog-transition-bottom">
         <div layout vertical>
           <div layout horizontal>
@@ -48,15 +48,15 @@
             </paper-input>
           </div>
         </div>
-        <paper-fab affirmative autofocus mini icon="check" onclick="save()"></paper-fab>
+        <paper-fab affirmative autofocus mini icon="check" on-click="{{save}}"></paper-fab>
       </paper-dialog>
 
       <!-- Icon at top left-->
-      <paper-icon-button icon="menu" onclick="toggleDialog('paper-dialog-transition-bottom')"></paper-icon-button>
+      <paper-icon-button icon="menu" on-click="{{toggle}}"></paper-icon-button>
     </template>
 
     <!-- Timer display -->
-    <template id="timer" is="auto-binding">
+    <template id="timer-display" is="auto-binding">
       <div flex vertical center-justified layout center>
         <div id="timeDisplay" class="{{state}}">{{time}}</div>
         <div id="taglineDisplay">{{tagline}}</div>
@@ -64,12 +64,13 @@
     </template>
 
     <!-- Timer controls -->
-    <div id="controls">
-      <paper-fab id="play" mini icon="av:play-arrow" onclick="start()"></paper-fab>
-      <paper-fab id="stop" mini icon="av:stop" onclick="stop()"></paper-fab>
-    </div>
-
-    <img id="logo" src="images/USAclimbing.png"></img>
+    <template id="timer-controls" is="auto-binding">
+      <div id="tc">
+        <paper-fab id="play" mini icon="av:play-arrow" on-click="{{start}}"></paper-fab>
+        <paper-fab id="stop" mini icon="av:stop" on-click="{{stop}}"></paper-fab>
+      </div>
+    </template>
+    <img id="usac-logo" src="images/USAclimbing.png"></img>
 
     <paper-toast text="You have not set transition or climbing time correctly"></paper-toast>
 

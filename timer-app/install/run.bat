@@ -1,0 +1,1 @@
+REM Execute atom against the project directory (or .asar)..\Atom\atom ..\app

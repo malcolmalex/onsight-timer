@@ -24,5 +24,8 @@
   "bugs": {
     "url": "https://github.com/malcolmalex/onsight-timer/issues"
   },
-  "homepage": "https://github.com/malcolmalex/onsight-timer"
+  "homepage": "https://github.com/malcolmalex/onsight-timer",
+  "devDependencies": {
+    "gulp-zip": "^2.0.2"
+  }
 }

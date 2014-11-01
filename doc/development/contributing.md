@@ -20,7 +20,7 @@ Contributing
 This project uses the basic fork/pull model, and follows some basic rules:
 
 - A distributable can be built from the master branch at any time.
-- To work on something, create a descriptively named branch off of master
+- To work on something, create an issue for discussion, and a descriptively named branch off of master
 - Commit to that locally, and regular push to the same-named branch on the server
 - When ready, or when you need feedback or review, submit a pull request
 - After it has been reviewed and signed-off, it will be merged into master

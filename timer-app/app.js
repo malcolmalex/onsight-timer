@@ -23,7 +23,7 @@ var transitionSubscription;
 var climbSubscription;
 
 // Initial UI setup
-var t = document.querySelector('#timer');
+var t = document.querySelector('#timer-display');
 t.time = "00:00";
 t.tagline = "Transition";
 t.state = "transition";
@@ -183,33 +183,30 @@ function disposeSubscriptions() {
   veryFirstSubscription.dispose();
 }
 
-// Open settings window
-function toggleDialog(transition) {
+// Save transition and climb times in seconds. UI provides times as "00:00"
+var settings = document.querySelector('#timer-settings');
+settings.toggle = function() {
   var dialog = document.querySelector('paper-dialog');
   dialog.toggle();
-}
+};
 
-// Save transition and climb times in seconds. UI provides times as "00:00"
-// format
-function save() {
-  var s = document.querySelector('#settings');
-
+settings.save = function() {
   // convert MM:SS to minutes and seconds integers
-  var t_min = parseInt(s.t_time.substring(0,2));
-  var t_sec = parseInt(s.t_time.substring(3));
+  var t_min = parseInt(this.t_time.substring(0,2));
+  var t_sec = parseInt(this.t_time.substring(3));
 
-  var c_min = parseInt(s.c_time.substring(0,2));
-  var c_sec = parseInt(s.c_time.substring(3));
+  var c_min = parseInt(this.c_time.substring(0,2));
+  var c_sec = parseInt(this.c_time.substring(3));
 
   // Calculate transition time and climb time from minutes and seconds
   t_total_sec = t_min * 60 + t_sec;
   c_total_sec = c_min * 60 + c_sec;
 
   createStreams();
-}
+};
 
-function start() {
-
+var timerControls = document.querySelector('#timer-controls');
+timerControls.start = function() {
   // need to check for good settings, else document.querySelector.show('paper-toast')
   if (!isNumber(t_total_sec) || !isNumber(c_total_sec)) {
     document.querySelector('paper-toast').show();
@@ -217,12 +214,13 @@ function start() {
   }
   console.log("Timer START");
   createSubscriptions();
-}
 
-function stop() {
+};
+
+timerControls.stop = function() {
   console.log("Timer STOP");
   disposeSubscriptions();
-}
+};
 
 // Utility for ensuring numeric transition and climbing times
 function isNumber(n){

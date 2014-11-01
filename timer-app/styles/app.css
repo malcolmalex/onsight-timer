@@ -43,13 +43,13 @@
       font-size: 5vw;
     }
 
-    #controls {
+    #tc {
       position: absolute;
       bottom: 15px;
       right: 15px;
     }
 
-    #logo {
+    #usac-logo {
       position: absolute;
       width: 175px;
       bottom: 10px;
