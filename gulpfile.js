@@ -91,8 +91,12 @@ gulp.task('vulcanize', ['downloadatomshell-dist'], function () {
     }))
 });
 
-gulp.task('copy-static-assets', ['vulcanize'], function () {
+gulp.task('copy-static-assets-1', ['vulcanize'], function () {
   gulp.src(['timer-app/images/**','timer-app/audio/**','timer-app/bin/**', 'timer-app/main.js', 'timer-app/package.json'], {base: "."})
+    .pipe(gulp.dest('dist'));
+});
+gulp.task('copy-static-assets-2', ['copy-static-assets-1'], function () {
+  gulp.src(['timer-app/bin/**'])
     .pipe(gulp.dest('dist'));
 });
 
@@ -104,7 +108,7 @@ gulp.task('build',['downloadatomshell-build']);
 // dist and run-dist will not work for windows.
 // FIXME: Must check asar list dist/timer-app.asar as need to add sometimes this
 // seems to run stuff in parallel and not everything finishes in time to pack asar
-gulp.task('asar', ['copy-static-assets'], shell.task([
+gulp.task('asar', ['copy-static-assets-2'], shell.task([
   path.normalize('asar pack dist/timer-app dist/timer-app.asar')
 ]));
 
