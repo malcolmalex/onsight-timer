@@ -16,15 +16,10 @@ following:
 - Ten seconds remaining in climb time
 - End-of-time
 
-Download
---------
+Download and Installation
+-------------------------
 
-Download the latest .zip file here for your operating system, and unzip to a convenient location.  
-
-Installation
-------------
-
-Find that folder you unzipped and on Windows double-click the <whatever> icon, and on Mac double-click the <whatever> icon.
+Download the latest release [here](https://github.com/malcolmalex/onsight-timer/releases), and follow the installation instructions. 
 
 Getting Started
 ---------------
