@@ -98,7 +98,6 @@ gulp.task('vulcanize', ['downloadatomshell-dist'], function () {
 gulp.task('copy-static-assets-1', ['vulcanize'], function () {
   gulp.src(['timer-app/images/**',
             'timer-app/audio/**',
-            'timer-app/bin/**', 
             'timer-app/main.js', 
             'timer-app/package.json'], {base: "."})
     .pipe(gulp.dest('dist'));
@@ -116,7 +115,7 @@ gulp.task('build',['downloadatomshell-build']);
 // Create the .asar file.  Assumes you've done npm install -g asar
 // FIXME: Note that asar format can't be generated on windows as of 10/23/2014, so
 // dist and run-dist will not work for windows.
-gulp.task('asar', ['copy-static-assets-2'], shell.task([
+gulp.task('dist', ['copy-static-assets-2'], shell.task([
   path.normalize('asar pack dist/timer-app dist/timer-app.asar')
 ]));
 
@@ -128,7 +127,7 @@ gulp.task('run-build', ['downloadatomshell-build'], shell.task([ runBuildCmd ]))
 // Run the local dist (.asar approach)
 // FIXME: Note that asar format can't be generated on windows as of 11/23/2014,
 // and so dist and run-dist will not work on that OS.
-gulp.task('run-dist', ['asar'], shell.task([ runDistCmd ]));
+gulp.task('run-dist', ['dist'], shell.task([ runDistCmd ]));
 
 // Delete the build and dist folder
 gulp.task('clean', function(cb) {
