@@ -11,6 +11,7 @@
  //   3. Copy static assets to dist (images/* and audio/*)
  //   4. Create asar file for application.
  //   5. Zip the whole onsight-timer directory in dist/
+ //      (zip currently not working)
  //
  // The dist task produces the following structure:
  //  dist/
@@ -19,11 +20,13 @@
  //      index.html (vulcanized)
  //      images/*
  //      audio/*
- //      bin/*
+ //    run.bat
+ //    run.command
 
-// Require various gulp and node plugins
+// Set atom shell version
 var atomShellVersion = '0.19.0';
 
+// Require various gulp and node plugins
 var gulp              = require('gulp');
 var shell             = require('gulp-shell');
 var downloadatomshell = require('gulp-download-atom-shell');
@@ -91,10 +94,17 @@ gulp.task('vulcanize', ['downloadatomshell-dist'], function () {
     }))
 });
 
+// Copy other files needed.
 gulp.task('copy-static-assets-1', ['vulcanize'], function () {
-  gulp.src(['timer-app/images/**','timer-app/audio/**','timer-app/bin/**', 'timer-app/main.js', 'timer-app/package.json'], {base: "."})
+  gulp.src(['timer-app/images/**',
+            'timer-app/audio/**',
+            'timer-app/bin/**', 
+            'timer-app/main.js', 
+            'timer-app/package.json'], {base: "."})
     .pipe(gulp.dest('dist'));
 });
+
+// Move the batch files up a level
 gulp.task('copy-static-assets-2', ['copy-static-assets-1'], function () {
   gulp.src(['timer-app/bin/**'])
     .pipe(gulp.dest('dist'));
@@ -106,8 +116,6 @@ gulp.task('build',['downloadatomshell-build']);
 // Create the .asar file.  Assumes you've done npm install -g asar
 // FIXME: Note that asar format can't be generated on windows as of 10/23/2014, so
 // dist and run-dist will not work for windows.
-// FIXME: Must check asar list dist/timer-app.asar as need to add sometimes this
-// seems to run stuff in parallel and not everything finishes in time to pack asar
 gulp.task('asar', ['copy-static-assets-2'], shell.task([
   path.normalize('asar pack dist/timer-app dist/timer-app.asar')
 ]));
@@ -120,7 +128,7 @@ gulp.task('run-build', ['downloadatomshell-build'], shell.task([ runBuildCmd ]))
 // Run the local dist (.asar approach)
 // FIXME: Note that asar format can't be generated on windows as of 11/23/2014,
 // and so dist and run-dist will not work on that OS.
-gulp.task('run-dist', ['dist'], shell.task([ runDistCmd ]));
+gulp.task('run-dist', ['asar'], shell.task([ runDistCmd ]));
 
 // Delete the build and dist folder
 gulp.task('clean', function(cb) {
