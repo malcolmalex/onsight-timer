@@ -24,7 +24,7 @@
  //    run.command
 
 // Set atom shell version
-var atomShellVersion = '0.19.0';
+var atomShellVersion = '0.19.1';
 
 // Require various gulp and node plugins
 var gulp              = require('gulp');
@@ -82,10 +82,10 @@ gulp.task('downloadatomshell-dist', function(cb) {
 // for polymer components. This allows the components directory to have whatever
 // is useful for development, but vulcanize includes only the items required.
 // Inline is used here to include everything necessary in the one index.html
-// FIXME: vulcanize seems to break data binding with curly braces?
-// Before vulcanizing, setting c_time and t_time in the settings tab works fine
-// but afterward, c_time and t_time are undefined no matter what you do with
-// the settings dialog
+// FIXME: Vulcanize changes the path in image tags, and for now, need to update
+// dist/timer-app/index.html to be relative again and then asar the folder. So
+// implication is that gulp-dist does not work once you want to .zip the
+// atom.app, timer-app.asar, run.command and move it.
 gulp.task('vulcanize', ['downloadatomshell-dist'], function () {
   gulp.src('timer-app/index.html')
     .pipe(vulcanize({
