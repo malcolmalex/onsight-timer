@@ -2,17 +2,20 @@
 <html lang="en">
   <head>
     <!-- Load platform.js for polyfill support -->
-    <script src="components/platform/platform.js"></script>
+    <script src="components/webcomponentsjs/webcomponents.min.js"></script>
 
     <!-- Import components -->
     <link rel="import" href="components/polymer/polymer.html">
-    <link rel="import" href="components/paper-dialog/paper-dialog.html">
+    
     <!-- FIXME: paper-dialog has breaking changes -->
+    <link rel="import" href="components/core-transition/core-transition.html">
+    <link rel="import" href="components/paper-dialog/paper-action-dialog.html">
     <link rel="import" href="components/paper-button/paper-button.html">
     <link rel="import" href="components/paper-icon-button/paper-icon-button.html">
     <link rel="import" href="components/core-icons/core-icons.html">
     <link rel="import" href="components/core-icons/av-icons.html">
     <link rel="import" href="components/paper-input/paper-input.html">
+    <link rel="import" href="components/paper-input/paper-input-decorator.html">
     <link rel="import" href="components/paper-fab/paper-fab.html">
     <link rel="import" href="components/paper-toast/paper-toast.html">
 
@@ -24,35 +27,42 @@
   <body fullbleed unresolved>
     <!-- Settings -->
     <template id="timer-settings" is="auto-binding">
-      <paper-dialog heading="Settings" transition="paper-dialog-transition-bottom">
+      <paper-action-dialog heading="Settings" transition="core-transition-center">
         <div layout vertical>
           <div layout horizontal>
-            <paper-input  pattern="\d\d:\d\d"
-                          required
-                          error="MM:SS"
-                          label="Transition Time"
-                          value="{{t_time}}"
-                          floatinglabel
-                          flex
-                          three>
-            </paper-input>
-            <span flex></span>
-            <paper-input  pattern="\d\d:\d\d"
-                          required
-                          error="MM:SS"
-                          label="Climbing Time"
-                          value="{{c_time}}"
-                          floatinglabel
-                          flex
-                          three>
-            </paper-input>
+            <paper-input-decorator floatinglabel  
+                                   label="Transition Time"
+                                   error="MM:SS"
+                                   flex
+                                   three
+                                   isInvalid="{{!$.ttimeinput.validity.valid}}">
+              <input id="ttimeinput" 
+                     is="core-input"  
+                     pattern="\d\d:\d\d"
+                     required
+                     value="{{t_time}}">
+            </paper-input-decorator>
+            <span flex two></span> 
+            <paper-input-decorator floatinglabel 
+                                   label="Climbing Time"
+                                   error="MM:SS"
+                                   flex 
+                                   three
+                                   isInvalid="{{!$.ctimeinput.validity.valid}}">
+              <input id="ctimeinput" 
+                     is="core-input"  
+                     pattern="\d\d:\d\d"
+                     required
+                     value="{{c_time}}">
+            </paper-input-decorator>
+
           </div>
         </div>
         <paper-fab affirmative autofocus mini icon="check" on-click="{{save}}"></paper-fab>
-      </paper-dialog>
+      </paper-action-dialog>
 
       <!-- Icon at top left-->
-      <paper-icon-button icon="menu" on-click="{{toggle}}"></paper-icon-button>
+      <paper-icon-button icon="settings" on-click="{{toggle}}"></paper-icon-button>
     </template>
 
     <!-- Timer display -->

@@ -1,6 +1,6 @@
 {
   "name": "rxjs",
-  "version": "2.3.16",
+  "version": "2.3.18",
   "main": [
     "dist/rx.all.js",
     "dist/rx.all.map",
@@ -68,11 +68,11 @@
     "tests"
   ],
   "homepage": "https://github.com/Reactive-Extensions/RxJS",
-  "_release": "2.3.16",
+  "_release": "2.3.18",
   "_resolution": {
     "type": "version",
-    "tag": "v2.3.16",
-    "commit": "507ab61194134937e9e92087876326d14ffcb4a6"
+    "tag": "v2.3.18",
+    "commit": "f11a419aa58ac7c75f41630b1dec6ae486244217"
   },
   "_source": "git://github.com/Reactive-Extensions/RxJS.git",
   "_target": "~2.3.14",
