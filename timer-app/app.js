@@ -186,10 +186,11 @@ function disposeSubscriptions() {
 // Save transition and climb times in seconds. UI provides times as "00:00"
 var settings = document.querySelector('#timer-settings');
 settings.toggle = function() {
-  var dialog = document.querySelector('paper-dialog');
+  var dialog = document.querySelector('paper-action-dialog');
   dialog.toggle();
 };
 
+// FIXME: Only save if get valid time. Note the problem with a time like: 00:1:15
 settings.save = function() {
   // convert MM:SS to minutes and seconds integers
   var t_min = parseInt(this.t_time.substring(0,2));

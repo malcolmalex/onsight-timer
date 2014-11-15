@@ -20,11 +20,11 @@
  //      index.html (vulcanized)
  //      images/*
  //      audio/*
- //    run.bat
- //    run.command
+ //    run-windows.bat
+ //    run-mac.command
 
 // Set atom shell version
-var atomShellVersion = '0.19.1';
+var atomShellVersion = '0.19.2';
 
 // Require various gulp and node plugins
 var gulp              = require('gulp');
@@ -71,6 +71,7 @@ gulp.task('downloadatomshell-build', function(cb) {
 });
 
 // Download atom-shell local to the project - to dist folder for distributables
+// TODO - make this a copy operation from build, not another download
 gulp.task('downloadatomshell-dist', function(cb) {
     downloadatomshell({
         version: atomShellVersion,
