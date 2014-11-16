@@ -19,7 +19,7 @@ following:
 Download and Installation
 -------------------------
 
-Download the latest release [here](https://github.com/malcolmalex/onsight-timer/releases), and follow the installation instructions. 
+Download the latest release [here](https://github.com/malcolmalex/onsight-timer/releases/latest), and follow the installation instructions. 
 
 Getting Started
 ---------------
