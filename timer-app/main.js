@@ -15,14 +15,10 @@ var mainWindow = null;
 
 // Check 2nd argument (filename) of command and see if .asar or just a folder
 // commands look like "atom timer-app.asar" or "atom timer-app"
-// TODO: Can't just double-click the icon in the dist folder as that doesn't
-// pass in the parameter for asar archive, as it's been installed in Resources
-// and from the command line it doesn't need to be there!
-// Running via the gulp-file is the only way at the moment to run the dist
-// version.
-var protocol = 'file';
+// Note the difference between protocol vars: one slash vs two slashes
+var protocol = 'file://';
 if (process.argv[1].indexOf('.asar') > -1) {
-    protocol = 'asar';
+    protocol = 'asar:/';
 }
 
 // Quit when all windows are closed.
@@ -38,9 +34,9 @@ app.on('ready', function() {
 
   // Create the browser window.
   mainWindow = new BrowserWindow({width: 800, height: 600});
-
+    
   // and load the index.html of the app, either in asar or regular file
-  var url = protocol + '://' + __dirname + '/index.html';
+  var url = protocol + __dirname + '/index.html';
   console.log('loading ' + url);
   mainWindow.loadUrl(url);
 

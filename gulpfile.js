@@ -14,12 +14,26 @@
  //      (zip currently not working)
  //
  // The dist task produces the following structure:
+ // Mac OS:
  //  dist/
- //    Atom/*
- //    timer-app/ (or timer-app.asar)
- //      index.html (vulcanized)
- //      images/*
- //      audio/*
+ //    app/
+ //      Atom/*
+ //      timer-app.asar
+ //        index.html (vulcanized)
+ //        images/*
+ //        audio/*
+ //    run-windows.bat
+ //    run-mac.command
+ //
+ // Windows:
+ //  dist/
+ //    app/
+ //      atom.exe
+ //      (whole bunch of .dlls and junk)
+ //      timer-app.asar
+ //        index.html (vulcanized)
+ //        images/*
+ //        audio/*
  //    run-windows.bat
  //    run-mac.command
 
@@ -35,6 +49,7 @@ var os                = require('os');
 var path              = require('path');
 var vulcanize         = require('gulp-vulcanize');
 var zip               = require('gulp-zip');
+var fs                = require('node-fs');
 
 // Determine platform, as running the applicaiton requires a different
 // command for mac vs. windows
@@ -50,11 +65,11 @@ var runDistCmd;
 switch(platform) {
   case 'darwin':
     runBuildCmd = 'build/Atom.app/Contents/MacOS/Atom timer-app';
-    runDistCmd = 'dist/Atom.app/Contents/MacOS/Atom dist/timer-app.asar';
+    runDistCmd = 'dist/app/Atom.app/Contents/MacOS/Atom dist/app/timer-app.asar';
     break;
   case 'win32':
     runBuildCmd = 'build\\atom.exe timer-app';
-    runDistCmd =  'dist\\atom.exe dist\\timer-app.asar';
+    runDistCmd =  'dist\\app\\atom.exe dist\\app\\timer-app.asar';
     break;
   default:
     console.log("Platform not supported. Needs to run on windows or mac.");
@@ -73,9 +88,13 @@ gulp.task('downloadatomshell-build', function(cb) {
 // Download atom-shell local to the project - to dist folder for distributables
 // TODO - make this a copy operation from build, not another download
 gulp.task('downloadatomshell-dist', function(cb) {
+    var distAppDir = 'dist/app';
+    if (!fs.existsSync(distAppDir)){
+        fs.mkdirSync(distAppDir,077,true);
+    }
     downloadatomshell({
         version: atomShellVersion,
-        outputDir: 'dist'
+        outputDir: distAppDir
     }, cb);
 });
 
@@ -90,22 +109,23 @@ gulp.task('downloadatomshell-dist', function(cb) {
 gulp.task('vulcanize', ['downloadatomshell-dist'], function () {
   gulp.src('timer-app/index.html')
     .pipe(vulcanize({
-      dest: 'dist/timer-app',
+      dest: 'dist/app/timer-app',
       inline: true
     }))
+    .pipe(gulp.dest('dist/app/timer-app'));
 });
 
 // Copy other files needed.
-gulp.task('copy-static-assets-1', ['vulcanize'], function () {
+gulp.task('copy-static-assets', ['vulcanize'], function () {
   gulp.src(['timer-app/images/**',
             'timer-app/audio/**',
             'timer-app/main.js', 
             'timer-app/package.json'], {base: "."})
-    .pipe(gulp.dest('dist'));
+    .pipe(gulp.dest('dist/app'));
 });
 
 // Move the batch files up a level
-gulp.task('copy-static-assets-2', ['copy-static-assets-1'], function () {
+gulp.task('copy-executable-scripts', ['copy-static-assets'], function () {
   gulp.src(['timer-app/bin/**'])
     .pipe(gulp.dest('dist'));
 });
@@ -116,8 +136,8 @@ gulp.task('build',['downloadatomshell-build']);
 // Create the .asar file.  Assumes you've done npm install -g asar
 // FIXME: Note that asar format can't be generated on windows as of 10/23/2014, so
 // dist and run-dist will not work for windows.
-gulp.task('dist', ['copy-static-assets-2'], shell.task([
-  path.normalize('asar pack dist/timer-app dist/timer-app.asar')
+gulp.task('dist', ['copy-executable-scripts'], shell.task([
+  path.normalize('asar pack dist/app/timer-app dist/app/timer-app.asar')
 ]));
 
 // Run the local build.  In development using this approach, you can just make

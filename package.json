@@ -10,6 +10,7 @@
     "gulp-download-atom-shell": "^0.0.4",
     "gulp-shell": "^0.2.10",
     "gulp-vulcanize": "^1.1.0",
+    "node-fs": "^0.1.7",
     "vulcanize": "^0.4.3"
   },
   "scripts": {
