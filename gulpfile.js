@@ -90,7 +90,7 @@ gulp.task('downloadatomshell-build', function(cb) {
 gulp.task('downloadatomshell-dist', function(cb) {
     var distAppDir = 'dist/app';
     if (!fs.existsSync(distAppDir)){
-        fs.mkdirSync(distAppDir,077,true);
+        fs.mkdirSync(distAppDir,0777,true);
     }
     downloadatomshell({
         version: atomShellVersion,
