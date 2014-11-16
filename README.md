@@ -21,6 +21,8 @@ Download and Installation
 
 Download the latest release [here](https://github.com/malcolmalex/onsight-timer/releases/latest), and follow the installation instructions. 
 
+If you run into security dialogs on the Mac, see [Mac security instructions](doc/mac-security/mac-security.md).
+
 Getting Started
 ---------------
 
