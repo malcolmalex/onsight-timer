@@ -21,6 +21,9 @@
     "core-elements": "Polymer/core-elements#~0.5.6",
     "paper-elements": "Polymer/paper-elements#~0.5.6",
     "numeraljs": "~1.5.3",
-    "rxjs": "~2.4.1"
+    "rxjs": "~2.5.2"
+  },
+  "resolutions": {
+    "webcomponentsjs": "0.7.0"
   }
 }
