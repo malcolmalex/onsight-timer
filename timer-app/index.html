@@ -18,6 +18,7 @@
     <link rel="import" href="components/paper-input/paper-input-decorator.html">
     <link rel="import" href="components/paper-fab/paper-fab.html">
     <link rel="import" href="components/paper-toast/paper-toast.html">
+    <link rel="import" href="components/core-image/core-image.html">
 
     <link rel="stylesheet" href="styles/app.css">
 
@@ -80,7 +81,8 @@
         <paper-fab id="stop" mini icon="av:stop" on-click="{{stop}}"></paper-fab>
       </div>
     </template>
-    <img id="usac-logo" src="images/USAclimbing.png"></img>
+
+    <core-image id="usac-logo" src="images/USAclimbing.png" preload sizing="contain"></core-image>
 
     <paper-toast text="You have not set transition or climbing time correctly"></paper-toast>
 
