@@ -3,7 +3,12 @@
   "version": "0.5.0",
   "description": "Competition rock climbing timer for onsight events.",
   "main": "gulpfile.js",
+<<<<<<< HEAD
   "dependencies": {},
+=======
+  "dependencies": {
+  },
+>>>>>>> 34f259a2aa3fee948508324acfe72bb829d919f2
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -18,6 +23,7 @@
   },
   "homepage": "https://github.com/malcolmalex/onsight-timer",
   "devDependencies": {
+<<<<<<< HEAD
     "del": "*",
     "gulp": "*",
     "gulp-asar": "*",
@@ -27,5 +33,16 @@
     "gulp-vulcanize": "1.1.0",
     "gulp-zip": "*",
     "vulcanize": "*"
+=======
+    "gulp-atom": "*",
+    "gulp-zip": "*",
+    "del": "*",
+    "gulp": "*",
+    "gulp-shell": "*",
+    "gulp-vulcanize": "1.1.0",
+    "gulp-rename":"*",
+    "vulcanize": "*",
+    "gulp-asar": "*"
+>>>>>>> 34f259a2aa3fee948508324acfe72bb829d919f2
   }
 }
