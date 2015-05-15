@@ -52,8 +52,7 @@
     helpers = Rx.helpers,
     isPromise = helpers.isPromise,
     isScheduler = helpers.isScheduler,
-    observableFromPromise = Observable.fromPromise,
-    deprecate = helpers.deprecate;
+    observableFromPromise = Observable.fromPromise;
 
   function observableTimerDate(dueTime, scheduler) {
     return new AnonymousObservable(function (observer) {
@@ -66,15 +65,15 @@
 
   function observableTimerDateAndPeriod(dueTime, period, scheduler) {
     return new AnonymousObservable(function (observer) {
-      var count = 0, d = dueTime, p = normalizeTime(period);
-      return scheduler.scheduleRecursiveWithAbsolute(d, function (self) {
+      var d = dueTime, p = normalizeTime(period);
+      return scheduler.scheduleRecursiveWithAbsoluteAndState(0, d, function (count, self) {
         if (p > 0) {
           var now = scheduler.now();
           d = d + p;
           d <= now && (d = now + p);
         }
-        observer.onNext(count++);
-        self(d);
+        observer.onNext(count);
+        self(count + 1, d);
       });
     });
   }
@@ -204,7 +203,7 @@
         }
       });
       return new CompositeDisposable(subscription, cancelable);
-    });
+    }, source);
   }
 
   function observableDelayDate(source, dueTime, scheduler) {
@@ -272,14 +271,14 @@
           id++;
         });
       return new CompositeDisposable(subscription, cancelable);
-    });
+    }, this);
   };
 
   /**
    * @deprecated use #debounce or #throttleWithTimeout instead.
    */
   observableProto.throttle = function(dueTime, scheduler) {
-    deprecate('throttle', 'debounce or throttleWithTimeout');
+    //deprecate('throttle', 'debounce or throttleWithTimeout');
     return this.debounce(dueTime, scheduler);
   };
 
@@ -360,7 +359,7 @@
         }
       ));
       return refCountDisposable;
-    });
+    }, source);
   };
 
   /**
@@ -421,7 +420,7 @@
         }
       ));
       return refCountDisposable;
-    });
+    }, source);
   };
 
     /**
@@ -499,7 +498,6 @@
   };
 
   function sampleObservable(source, sampler) {
-
     return new AnonymousObservable(function (observer) {
       var atEnd, value, hasValue;
 
@@ -520,7 +518,7 @@
         }),
         sampler.subscribe(sampleSubscribe, observer.onError.bind(observer), sampleSubscribe)
       );
-    });
+    }, source);
   }
 
   /**
@@ -596,7 +594,7 @@
         }
       }));
       return new CompositeDisposable(subscription, timer);
-    });
+    }, source);
   };
 
   /**
@@ -722,73 +720,69 @@
     return this.delayWithSelector(observableTimer(dueTime, isScheduler(scheduler) ? scheduler : timeoutScheduler), observableEmpty);
   };
 
-    /**
-     *  Time shifts the observable sequence based on a subscription delay and a delay selector function for each element.
-     *
-     * @example
-     *  1 - res = source.delayWithSelector(function (x) { return Rx.Scheduler.timer(5000); }); // with selector only
-     *  1 - res = source.delayWithSelector(Rx.Observable.timer(2000), function (x) { return Rx.Observable.timer(x); }); // with delay and selector
-     *
-     * @param {Observable} [subscriptionDelay]  Sequence indicating the delay for the subscription to the source.
-     * @param {Function} delayDurationSelector Selector function to retrieve a sequence indicating the delay for each given element.
-     * @returns {Observable} Time-shifted sequence.
-     */
-    observableProto.delayWithSelector = function (subscriptionDelay, delayDurationSelector) {
-        var source = this, subDelay, selector;
-        if (typeof subscriptionDelay === 'function') {
-            selector = subscriptionDelay;
-        } else {
-            subDelay = subscriptionDelay;
-            selector = delayDurationSelector;
-        }
-        return new AnonymousObservable(function (observer) {
-            var delays = new CompositeDisposable(), atEnd = false, done = function () {
-                if (atEnd && delays.length === 0) {
-                    observer.onCompleted();
-                }
-            }, subscription = new SerialDisposable(), start = function () {
-                subscription.setDisposable(source.subscribe(function (x) {
-                    var delay;
-                    try {
-                        delay = selector(x);
-                    } catch (error) {
-                        observer.onError(error);
-                        return;
-                    }
-                    var d = new SingleAssignmentDisposable();
-                    delays.add(d);
-                    d.setDisposable(delay.subscribe(function () {
-                        observer.onNext(x);
-                        delays.remove(d);
-                        done();
-                    }, observer.onError.bind(observer), function () {
-                        observer.onNext(x);
-                        delays.remove(d);
-                        done();
-                    }));
-                }, observer.onError.bind(observer), function () {
-                    atEnd = true;
-                    subscription.dispose();
-                    done();
-                }));
-            };
+  /**
+   *  Time shifts the observable sequence based on a subscription delay and a delay selector function for each element.
+   *
+   * @example
+   *  1 - res = source.delayWithSelector(function (x) { return Rx.Scheduler.timer(5000); }); // with selector only
+   *  1 - res = source.delayWithSelector(Rx.Observable.timer(2000), function (x) { return Rx.Observable.timer(x); }); // with delay and selector
+   *
+   * @param {Observable} [subscriptionDelay]  Sequence indicating the delay for the subscription to the source.
+   * @param {Function} delayDurationSelector Selector function to retrieve a sequence indicating the delay for each given element.
+   * @returns {Observable} Time-shifted sequence.
+   */
+  observableProto.delayWithSelector = function (subscriptionDelay, delayDurationSelector) {
+      var source = this, subDelay, selector;
+      if (typeof subscriptionDelay === 'function') {
+        selector = subscriptionDelay;
+      } else {
+        subDelay = subscriptionDelay;
+        selector = delayDurationSelector;
+      }
+      return new AnonymousObservable(function (observer) {
+        var delays = new CompositeDisposable(), atEnd = false, done = function () {
+            if (atEnd && delays.length === 0) { observer.onCompleted(); }
+        }, subscription = new SerialDisposable(), start = function () {
+          subscription.setDisposable(source.subscribe(function (x) {
+              var delay;
+              try {
+                delay = selector(x);
+              } catch (error) {
+                observer.onError(error);
+                return;
+              }
+              var d = new SingleAssignmentDisposable();
+              delays.add(d);
+              d.setDisposable(delay.subscribe(function () {
+                observer.onNext(x);
+                delays.remove(d);
+                done();
+              }, observer.onError.bind(observer), function () {
+                observer.onNext(x);
+                delays.remove(d);
+                done();
+              }));
+          }, observer.onError.bind(observer), function () {
+            atEnd = true;
+            subscription.dispose();
+            done();
+          }));
+      };
 
-            if (!subDelay) {
-                start();
-            } else {
-                subscription.setDisposable(subDelay.subscribe(function () {
-                    start();
-                }, observer.onError.bind(observer), function () { start(); }));
-            }
+      if (!subDelay) {
+        start();
+      } else {
+        subscription.setDisposable(subDelay.subscribe(start, observer.onError.bind(observer), start));
+      }
 
-            return new CompositeDisposable(subscription, delays);
-        });
-    };
+      return new CompositeDisposable(subscription, delays);
+    }, this);
+  };
 
     /**
      *  Returns the source observable sequence, switching to the other observable sequence if a timeout is signaled.
      * @param {Observable} [firstTimeout]  Observable sequence that represents the timeout for the first element. If not provided, this defaults to Observable.never().
-     * @param {Function} [timeoutDurationSelector] Selector to retrieve an observable sequence that represents the timeout between the current element and the next element.
+     * @param {Function} timeoutDurationSelector Selector to retrieve an observable sequence that represents the timeout between the current element and the next element.
      * @param {Observable} [other]  Sequence to return in case of a timeout. If not provided, this is set to Observable.throwException().
      * @returns {Observable} The source sequence switching to the other sequence in case of a timeout.
      */
@@ -851,7 +845,7 @@
           observerWins() && observer.onCompleted();
         }));
         return new CompositeDisposable(subscription, timer);
-      });
+      }, source);
     };
 
   /**
@@ -901,12 +895,15 @@
         id++;
       });
       return new CompositeDisposable(subscription, cancelable);
-    });
+    }, source);
   };
 
-  observableProto.throttleWithSelector = function () {
-    deprecate('throttleWithSelector', 'debounceWithSelector');
-    return this.debounceWithSelector.apply(this, arguments);
+  /**
+   * @deprecated use #debounceWithSelector instead.
+   */
+  observableProto.throttleWithSelector = function (durationSelector) {
+    //deprecate('throttleWithSelector', 'debounceWithSelector');
+    return this.debounceWithSelector(durationSelector);
   };
 
   /**
@@ -926,22 +923,22 @@
   observableProto.skipLastWithTime = function (duration, scheduler) {
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
     var source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var q = [];
       return source.subscribe(function (x) {
         var now = scheduler.now();
         q.push({ interval: now, value: x });
         while (q.length > 0 && now - q[0].interval >= duration) {
-          observer.onNext(q.shift().value);
+          o.onNext(q.shift().value);
         }
-      }, observer.onError.bind(observer), function () {
+      }, function (e) { o.onError(e); }, function () {
         var now = scheduler.now();
         while (q.length > 0 && now - q[0].interval >= duration) {
-          observer.onNext(q.shift().value);
+          o.onNext(q.shift().value);
         }
-        observer.onCompleted();
+        o.onCompleted();
       });
-    });
+    }, source);
   };
 
   /**
@@ -957,7 +954,7 @@
   observableProto.takeLastWithTime = function (duration, scheduler) {
     var source = this;
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var q = [];
       return source.subscribe(function (x) {
         var now = scheduler.now();
@@ -965,15 +962,15 @@
         while (q.length > 0 && now - q[0].interval >= duration) {
           q.shift();
         }
-      }, observer.onError.bind(observer), function () {
+      }, function (e) { o.onError(e); }, function () {
         var now = scheduler.now();
         while (q.length > 0) {
           var next = q.shift();
-          if (now - next.interval <= duration) { observer.onNext(next.value); }
+          if (now - next.interval <= duration) { o.onNext(next.value); }
         }
-        observer.onCompleted();
+        o.onCompleted();
       });
-    });
+    }, source);
   };
 
   /**
@@ -989,7 +986,7 @@
   observableProto.takeLastBufferWithTime = function (duration, scheduler) {
     var source = this;
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var q = [];
       return source.subscribe(function (x) {
         var now = scheduler.now();
@@ -997,16 +994,16 @@
         while (q.length > 0 && now - q[0].interval >= duration) {
           q.shift();
         }
-      }, observer.onError.bind(observer), function () {
+      }, function (e) { o.onError(e); }, function () {
         var now = scheduler.now(), res = [];
         while (q.length > 0) {
           var next = q.shift();
-          if (now - next.interval <= duration) { res.push(next.value); }
+          now - next.interval <= duration && res.push(next.value);
         }
-        observer.onNext(res);
-        observer.onCompleted();
+        o.onNext(res);
+        o.onCompleted();
       });
-    });
+    }, source);
   };
 
   /**
@@ -1025,9 +1022,9 @@
   observableProto.takeWithTime = function (duration, scheduler) {
     var source = this;
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    return new AnonymousObservable(function (observer) {
-      return new CompositeDisposable(scheduler.scheduleWithRelative(duration, observer.onCompleted.bind(observer)), source.subscribe(observer));
-    });
+    return new AnonymousObservable(function (o) {
+      return new CompositeDisposable(scheduler.scheduleWithRelative(duration, function () { o.onCompleted(); }), source.subscribe(o));
+    }, source);
   };
 
   /**
@@ -1054,7 +1051,7 @@
       return new CompositeDisposable(
         scheduler.scheduleWithRelative(duration, function () { open = true; }),
         source.subscribe(function (x) { open && observer.onNext(x); }, observer.onError.bind(observer), observer.onCompleted.bind(observer)));
-    });
+    }, source);
   };
 
   /**
@@ -1073,16 +1070,15 @@
     var source = this, schedulerMethod = startTime instanceof Date ?
       'scheduleWithAbsolute' :
       'scheduleWithRelative';
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var open = false;
 
       return new CompositeDisposable(
         scheduler[schedulerMethod](startTime, function () { open = true; }),
         source.subscribe(
-          function (x) { open && observer.onNext(x); },
-          observer.onError.bind(observer),
-          observer.onCompleted.bind(observer)));
-    });
+          function (x) { open && o.onNext(x); },
+          function (e) { o.onError(e); }, function () { o.onCompleted(); }));
+    }, source);
   };
 
   /**
@@ -1096,11 +1092,11 @@
     var source = this, schedulerMethod = endTime instanceof Date ?
       'scheduleWithAbsolute' :
       'scheduleWithRelative';
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       return new CompositeDisposable(
-        scheduler[schedulerMethod](endTime, observer.onCompleted.bind(observer)),
-        source.subscribe(observer));
-    });
+        scheduler[schedulerMethod](endTime, function () { o.onCompleted(); }),
+        source.subscribe(o));
+    }, source);
   };
 
   /**
@@ -1114,20 +1110,18 @@
     var duration = +windowDuration || 0;
     if (duration <= 0) { throw new RangeError('windowDuration cannot be less or equal zero.'); }
     var source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var lastOnNext = 0;
       return source.subscribe(
         function (x) {
           var now = scheduler.now();
           if (lastOnNext === 0 || now - lastOnNext >= duration) {
             lastOnNext = now;
-            observer.onNext(x);
+            o.onNext(x);
           }
-        },
-        observer.onError.bind(observer),
-        observer.onCompleted.bind(observer)
+        },function (e) { o.onError(e); }, function () { o.onCompleted(); }
       );
-    });
+    }, source);
   };
 
     return Rx;

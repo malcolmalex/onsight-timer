@@ -44,7 +44,8 @@ Styling ripple effect:
   Note that CSS color property is inherited so it is not required to set it on
   the `paper-ripple` element directly.
 
-Apply `recenteringTouch` class to make the recentering rippling effect.
+By default, the ripple is centered on the point of contact.  Apply `recenteringTouch` 
+class to have the ripple grow toward the center of its container.
 
     <paper-ripple class="recenteringTouch"></paper-ripple>
 
@@ -362,7 +363,7 @@ animation finishes to perform some action.
           // Declare the next wave that has mouse down to be mouse'ed up.
           var wave = this.waves[i];
           if (wave.isMouseDown) {
-            wave.isMouseDown = false
+            wave.isMouseDown = false;
             wave.mouseUpStart = now();
             wave.mouseDownStart = 0;
             wave.tUp = 0.0;

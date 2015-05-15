@@ -13,19 +13,9 @@ require('crash-reporter').start();
 // be closed automatically when the javascript object is GCed.
 var mainWindow = null;
 
-// Check 2nd argument (filename) of command and see if .asar or just a folder
-// commands look like "atom timer-app.asar" or "atom timer-app"
-// Note the difference between protocol vars: one slash vs two slashes
-var protocol = 'file://';
-if (process.argv[1].indexOf('.asar') > -1) {
-    protocol = 'asar:/';
-}
-
-// Quit when all windows are closed.
-// FIXME: quit not working.
+// // Terminate when window closed
 app.on('window-all-closed', function() {
-  if (process.platform != 'darwin')
-    app.quit();
+    app.terminate();
 });
 
 // This method will be called when atom-shell has done everything
@@ -34,11 +24,19 @@ app.on('ready', function() {
 
   // Create the browser window.
   mainWindow = new BrowserWindow({width: 800, height: 600});
-    
-  // and load the index.html of the app, either in asar or regular file
-  var url = protocol + __dirname + '/index.html';
+
+  // If NODE_ENV environment variable is not production, assume dev
+  var development = process.env.NODE_ENV !== 'production';
+
+  var url = 'file://' + __dirname + '/index.html'
+
   console.log('loading ' + url);
   mainWindow.loadUrl(url);
+
+  // Launch chrome dev tools in dev
+  if (development) {
+    mainWindow.openDevTools(['detach']);
+  }
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
