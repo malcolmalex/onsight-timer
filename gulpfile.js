@@ -13,35 +13,35 @@ var zip               = require('gulp-zip');
 var gulpAtom          = require('gulp-atom');
 var gulpAsar          = require('gulp-asar');
 var replace           = require('gulp-replace');
+var rename            = require('gulp-rename');
 
 // Determine platform, as running the applicaiton requires a different
 // command for mac vs. windows
 var platform = os.platform();
 
 // Declare some variables for building run commands
-var electronExecutableMac = 'dist/'+ electronVersion + '/darwin-x64/Electron.app/Contents/MacOS/Electron';
-var electronExecutableWin = 'dist\\' + electronVersion + '\\win32-ia32\\electron.exe'
+var zipRootDirMac = 'dist/'+ electronVersion + '/darwin-x64';
+var zipRootDirWin = 'dist/' + electronVersion + '/win32-ia32';
+var electronExecutableMac = zipRootDirMac + '/Electron.app/Contents/MacOS/Electron';
+var electronExecutableWin = zipRootDirWin + '\\electron.exe';
 var distAppDirMac = 'dist/'+ electronVersion + '/darwin-x64/Electron.app/Contents/Resources';
 var distAppDirWin = 'dist/'+ electronVersion + '/win32-ia32/resources';
 
-var releaseAppPath
 var runBuildCmd;
-var runReleaseCmd;
+var runDistCmd;
 
 // Build the commands that will run the app, accounting for platform differences
 // and whether we want to run from the dev form (timer-app folder) or dist form
-// (.asar archive)
+// (.asar archive). The runDistCmd assumes a .asar has been dropped in correct place
 
-// FIXME: Need to get this runDistCmd fixed ... see release/v${version}/darwin-x64/Atom.app app
-// TODO: Make gulp-atom work with ASAR files, not just exploded files structure.
 switch(platform) {
   case 'darwin':
     runBuildCmd = electronExecutableMac + ' build/timer-app';
-    runReleaseCmd = electronExecutableMac + ' build/app.asar';
+    runDistCmd = electronExecutableMac;
     break;
   case 'win32':
     runBuildCmd = electronExecutableWin + 'build\\timer-app';
-    runReleaseCmd =  electronExecutableWin + 'build\\app.asar';
+    runDistCmd =  electronExecutableWin;
     break;
   default:
     console.log("Platform not supported. Needs to run on windows or mac.");
@@ -53,7 +53,7 @@ switch(platform) {
 // for polymer components. This task allows the components directory to have whatever
 // is useful for development, but vulcanize includes only the items required.
 // Inline is used here to include everything necessary in the one index.html
-// The replace is done here to hack around an issue where vulcanize changes path on
+// FIXME: The replace is done here to hack around an issue where vulcanize changes path on
 // image src attributes to be relative to the original file location.
 gulp.task('vulcanize', function () {
   gulp.src('timer-app/index.html')
@@ -95,19 +95,25 @@ gulp.task('dist', ['copy-executable-scripts'], function () {
 
 // Create the .asar file, deposit in the dist locations, with the standard app.asar
 // name so that we don't need a shell script to execute
-gulp.task('build-asar', ['dist'], function (cb) {
+gulp.task('dist-postprocess', ['dist'], function (cb) {
   gulp.src('build/timer-app/**/*')
     .pipe(gulpAsar('app.asar'))
     .pipe(gulp.dest(distAppDirMac))
-    .pipe(gulp.dest(distAppDirWin))
+    .pipe(gulp.dest(distAppDirWin));
 
   // Remove the exploded versions of the app folder to force .asar use
-  del([distAppDirWin + '/app', distAppDirMac + '/app'], cb)
-});
-
-gulp.task('release', ['build-asar'], function () {
+  del([distAppDirWin + '/app', distAppDirMac + '/app'], cb);
 
 });
+
+gulp.task('release', ['dist-postprocess'], function () {
+  // TODO: Rebrand (win? and mac) ... or simpler, just drop the batch files in the right place
+  // TODO: Zip (win and mac)
+});
+
+gulp.task('run-build', shell.task([ runBuildCmd ]));
+
+gulp.task('run-dist', shell.task([ runDistCmd ]));
 
 // Delete the build and dist folder
 gulp.task('clean', function(cb) {
