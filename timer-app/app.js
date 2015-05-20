@@ -28,6 +28,9 @@ t.time = "00:00";
 t.tagline = "Transition";
 t.state = "transition";
 
+// Start/Stop control
+var running = false;
+
 function createStreams() {
   // Create transition and climb streams with events 1000 ms apart, but
   // keep only transition time and climb time worth
@@ -208,19 +211,26 @@ settings.save = function() {
 
 var timerControls = document.querySelector('#timer-controls');
 timerControls.start = function() {
-  // need to check for good settings, else document.querySelector.show('paper-toast')
-  if (!isNumber(t_total_sec) || !isNumber(c_total_sec)) {
-    document.querySelector('paper-toast').show();
+  if (!running) {
+    // need to check for good settings, else document.querySelector.show('paper-toast')
+    if (!isNumber(t_total_sec) || !isNumber(c_total_sec)) {
+      document.querySelector('paper-toast').show();
+    } else {
+      running = true;
+      console.log("Timer START");
+      createSubscriptions();
+    }
     return;
   }
-  console.log("Timer START");
-  createSubscriptions();
 
 };
 
 timerControls.stop = function() {
-  console.log("Timer STOP");
-  disposeSubscriptions();
+  if (running) {
+    running = false;
+    console.log("Timer STOP");
+    disposeSubscriptions();
+  }
 };
 
 // Utility for ensuring numeric transition and climbing times
