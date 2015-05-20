@@ -3,7 +3,10 @@ var electronVersion = 'v0.26.0';
 var deploymentPlatforms = ['win32-ia32', 'darwin-x64'];
 
 // Require various gulp and node plugins
-var gulp              = require('gulp');
+var gulp              = require('gulp-help')(require('gulp')); // for gulp help task list
+var args              = require('yargs').argv;
+var config            = require('./gulp.config')();
+
 var shell             = require('gulp-shell');
 var del               = require('del');
 var os                = require('os');
@@ -14,6 +17,8 @@ var gulpAtom          = require('gulp-atom');
 var gulpAsar          = require('gulp-asar');
 var replace           = require('gulp-replace');
 var rename            = require('gulp-rename');
+var print             = require('gulp-print');
+var bump              = require('gulp-bump');
 
 // Determine platform, as running the applicaiton requires a different
 // command for mac vs. windows
@@ -55,7 +60,7 @@ switch(platform) {
 // Inline is used here to include everything necessary in the one index.html
 // FIXME: The replace is done here to hack around an issue where vulcanize changes path on
 // image src attributes to be relative to the original file location.
-gulp.task('vulcanize', function () {
+gulp.task('vulcanize', 'Vulcanize Polymer files into index.html', function () {
   gulp.src('timer-app/index.html')
     .pipe(vulcanize({
       dest: 'build/timer-app',
@@ -66,7 +71,7 @@ gulp.task('vulcanize', function () {
 });
 
 // Copy other files needed. 
-gulp.task('copy-static-assets', ['vulcanize'], function () {
+gulp.task('copy-static-assets', 'Copy images, audio, etc', ['vulcanize'], function () {
   gulp.src(['timer-app/images/**',
             'timer-app/audio/**',
             'timer-app/main.js', 
@@ -75,13 +80,13 @@ gulp.task('copy-static-assets', ['vulcanize'], function () {
 });
 
 // Move the batch files up a level
-gulp.task('copy-executable-scripts', ['copy-static-assets'], function () {
+gulp.task('copy-executable-scripts', 'Copy executable files for win and mac', ['copy-static-assets'], function () {
   gulp.src(['timer-app/bin/**'])
     .pipe(gulp.dest('build'));
 });
 
 // Package up the app with Electron
-gulp.task('dist', ['copy-executable-scripts'], function () {
+gulp.task('dist', 'Download and cache Electron binaries', ['copy-executable-scripts'], function () {
 
     return gulpAtom({
         srcPath: './build/timer-app',
@@ -95,7 +100,7 @@ gulp.task('dist', ['copy-executable-scripts'], function () {
 
 // Create the .asar file, deposit in the dist locations, with the standard app.asar
 // name so that we don't need a shell script to execute
-gulp.task('dist-postprocess', ['dist'], function (cb) {
+gulp.task('dist-postprocess', 'Create .asar file and drop in Electron', ['dist'], function (cb) {
   gulp.src('build/timer-app/**/*')
     .pipe(gulpAsar('app.asar'))
     .pipe(gulp.dest(distAppDirMac))
@@ -106,18 +111,44 @@ gulp.task('dist-postprocess', ['dist'], function (cb) {
 
 });
 
-gulp.task('release', ['dist-postprocess'], function () {
+gulp.task('release', 'TODO: Create zip files, rebrand icons, etc', ['dist-postprocess'], function () {
   // TODO: Rebrand (win? and mac) ... or simpler, just drop the batch files in the right place
   // TODO: Zip (win and mac)
 });
 
-gulp.task('run-build', shell.task([ runBuildCmd ]));
+gulp.task('run-build', 'Run from the build folder', [], shell.task([ runBuildCmd ]));
 
-gulp.task('run-dist', shell.task([ runDistCmd ]));
+gulp.task('run-dist', 'Run from the dist folder', [], shell.task([ runDistCmd ]));
 
+/**
+ --type=pre will bump the prerelease version *.*.*-x
+ --type=patch or no flag will bump the patch version *.*.x
+ --type=minor will bump the minor version *.x.*
+ --type=major will bump the major version x.*.*
+ --version=1.2.3 will bump to a specific version and ignore other flags
+*/
+gulp.task('bump', 'Update versions in bower or package files', [], function () {
+  var msg = 'Bumping version';
+  var type = args.type;
+  var version = args.version;
+  var options = {};
+  if (version) {
+    options.version = version;
+    msg += ' to ' + version;
+  } else {
+    options.type = type;
+    msg += ' for a ' + type;
+  }
+  console.log(msg);
+  return gulp.src(config.packages)
+    .pipe(bump(options))
+    .pipe(print())
+    .pipe(gulp.dest('./'));
+
+});
 // Delete the build and dist folder
-gulp.task('clean', function(cb) {
+gulp.task('clean', 'Delete build and dist directories',[], function(cb) {
   del(['build', 'release', 'dist'], cb);
 });
 
-gulp.task('default', ['release']);
+gulp.task('default', 'Release task is the default', ['release']);
