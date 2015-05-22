@@ -38,7 +38,7 @@ When ready to start, click the **play** button in the bottom right corner, and t
 
 Click the **stop** button at the bottom right when you want to end the timing. There is no pause and restart from where you left off.
 
-> To use just a climbing phase, enter 00:00 for the transition time.
+> To use just a climbing phase (no transition), enter 00:00 for the transition time.
 
 Systems Supported
 -----------------

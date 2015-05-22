@@ -1,7 +1,3 @@
-// Useful variables
-var electronVersion = 'v0.26.0';
-var deploymentPlatforms = ['win32-ia32', 'darwin-x64'];
-
 // Require various gulp and node plugins
 var gulp              = require('gulp-help')(require('gulp')); // for gulp help task list
 var args              = require('yargs').argv;
@@ -25,12 +21,8 @@ var bump              = require('gulp-bump');
 var platform = os.platform();
 
 // Declare some variables for building run commands
-var zipRootDirMac = 'dist/'+ electronVersion + '/darwin-x64';
-var zipRootDirWin = 'dist/' + electronVersion + '/win32-ia32';
-var electronExecutableMac = zipRootDirMac + '/Electron.app/Contents/MacOS/Electron';
-var electronExecutableWin = zipRootDirWin + '\\electron.exe';
-var distAppDirMac = 'dist/'+ electronVersion + '/darwin-x64/Electron.app/Contents/Resources';
-var distAppDirWin = 'dist/'+ electronVersion + '/win32-ia32/resources';
+var electronExecutableMac = config.paths.zipRootDirMac + '/Electron.app/Contents/MacOS/Electron';
+var electronExecutableWin = config.paths.zipRootDirWin + '\\electron.exe';
 
 var runBuildCmd;
 var runDistCmd;
@@ -45,7 +37,7 @@ switch(platform) {
     runDistCmd = electronExecutableMac;
     break;
   case 'win32':
-    runBuildCmd = electronExecutableWin + 'build\\timer-app';
+    runBuildCmd = electronExecutableWin + ' build\\timer-app';
     runDistCmd =  electronExecutableWin;
     break;
   default:
@@ -70,11 +62,11 @@ gulp.task('vulcanize', 'Vulcanize Polymer files into index.html', function () {
     .pipe(gulp.dest('build/timer-app'));
 });
 
-// Copy other files needed. 
+// Copy other files needed.
 gulp.task('copy-static-assets', 'Copy images, audio, etc', ['vulcanize'], function () {
   gulp.src(['timer-app/images/**',
             'timer-app/audio/**',
-            'timer-app/main.js', 
+            'timer-app/main.js',
             'timer-app/package.json'], {base: "."})
     .pipe(gulp.dest('build'));
 });
@@ -92,9 +84,9 @@ gulp.task('dist', 'Download and cache Electron binaries', ['copy-executable-scri
         srcPath: './build/timer-app',
         releasePath: './dist',
         cachePath: './cache',
-        version: electronVersion,
+        version: config.electronVersion,
         rebuild: false,
-        platforms: deploymentPlatforms
+        platforms: config.deploymentPlatforms
     });
 });
 
@@ -103,11 +95,11 @@ gulp.task('dist', 'Download and cache Electron binaries', ['copy-executable-scri
 gulp.task('dist-postprocess', 'Create .asar file and drop in Electron', ['dist'], function (cb) {
   gulp.src('build/timer-app/**/*')
     .pipe(gulpAsar('app.asar'))
-    .pipe(gulp.dest(distAppDirMac))
-    .pipe(gulp.dest(distAppDirWin));
+    .pipe(gulp.dest(config.paths.distAppDirMac))
+    .pipe(gulp.dest(config.paths.distAppDirWin));
 
   // Remove the exploded versions of the app folder to force .asar use
-  del([distAppDirWin + '/app', distAppDirMac + '/app'], cb);
+  del([config.paths.distAppDirWin + '/app', config.paths.distAppDirMac + '/app'], cb);
 
 });
 
